@@ -1,6 +1,27 @@
 const bcrypt = require('bcrypt');
 const GENESIS_BLOCK = require('./genesis');
 const SHA256 = require('crypto-js/sha256');
+const CryptoJS = require('crypto-js');
+const express = require('express');
+const bodyParser = require('body-parser');
+const WebSoket = require('ws');
+
+// PORT Assignment local dev
+
+let http_port = process.env.HTTP_PORT || 3010;
+let ptp_port = process.env.HTTP_PORT || 6010;
+let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
+
+
+let sockets = [];
+let MessageType = {
+    QUERY_LATEST : 0,
+    QUERY_ALL : 1,
+    RESPONSE_BLOCKCHAIN : 2
+};
+
+
+// const Block = require('./block');
 
 
 class Block {
@@ -15,8 +36,8 @@ class Block {
 
     makeHash() {
         // console.log('this is the freaking Cyberdyne Hash ------> ', SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString());
-        this.nonce = this.id;
-        return SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString();
+        this.nonce = this.id; // set nonce equal to id. This will be used as a security check
+        return SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString(); // return hash using SHA256 imported library
     }
 }
 
