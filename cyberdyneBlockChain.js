@@ -1,4 +1,4 @@
-import Transaction from './transactions';
+const Transaction = require('./transactions');
 const bcrypt = require('bcrypt');
 const GENESIS_BLOCK = require('./genesis');
 const SHA256 = require('crypto-js/sha256');

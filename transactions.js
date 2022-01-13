@@ -1,9 +1,9 @@
 const SHA256 = require('crypto-js/sha256');
-import Elliptic from 'elliptic';
+const Elliptic = require( 'elliptic');
 
 const ec = new Elliptic.ec('secp256k1');
 
-export default class Transaction { // define and export class with a constructor 
+class Transaction { // define and export class with a constructor 
     constructor(addressFrom, addressTo, amount) { // when class is initiated, it will take in from address, to address, and amount
         this.addressFrom = addressFrom; // make this.addressFrom equal to the passed in value of addressFrom
         this.addressTo = addressTo; // make this.addressTo equal to the passed in value of addressTo
@@ -48,3 +48,5 @@ export default class Transaction { // define and export class with a constructor
         return publicKey.verify(this.makeHash(), this.signature);
     }
 }
+
+module.exports = {Transaction};
