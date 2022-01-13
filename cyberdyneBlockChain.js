@@ -1,3 +1,4 @@
+import Transaction from './transactions';
 const bcrypt = require('bcrypt');
 const GENESIS_BLOCK = require('./genesis');
 const SHA256 = require('crypto-js/sha256');
@@ -8,7 +9,7 @@ const WebSocket = require('ws');
 // const Block = require('./block');
 
 
-class Block {
+class Terminator {
     constructor(id, timestamp, data, prevHash) {
         this.id = id;
         this.timestamp =timestamp;
@@ -16,6 +17,7 @@ class Block {
         this.prevHash = prevHash;
         this.data = data; 
         this.nonce = id;
+        
     }
 
     makeHash() {
@@ -23,11 +25,33 @@ class Block {
         this.nonce = this.id; // set nonce equal to id. This will be used as a security check
         return SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString(); // return hash using SHA256 imported library
     }
+
+    transactionIsValid() {
+        for(const data of this.data){
+            if(!data.isValid()){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    mineBlock(difficulty) {
+        while(this.blockHash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
+            this.nonce++;
+            this.blockHash = this.makeHash();
+        }
+
+        console.log('Skynet mined another Terminator: #', this.nonce + '\n' + this.blockHash); 
+    }
 }
 
 class CyberDyneChain {
     constructor() {
         this.skynet_chain = [this.mineGenesisBlock()];
+        this.difficulty = 3;
+        this.pendingTransactions = [];
+        this.miningReward = 1000;
     }
     initMessages() {
         setTimeout(() => {
@@ -61,9 +85,7 @@ class CyberDyneChain {
         this.initMessages();
         let firstHash = this.createHash('starting T1 Models');
         
-        return new Block(1, Date.now(), 'Initiating Cyberdyne Systems...', firstHash);
-        
-        
+        return new Terminator(1, Date.now(), 'Initiating Cyberdyne Systems...', firstHash);
     }
     
     createHash(toHash) {
@@ -88,6 +110,77 @@ class CyberDyneChain {
 
         this.skynet_chain.push(newBlock); 
     }
+
+    addTransaction(transaction) {
+        if(!transaction.fromAddress || !transaction.toAddress) {
+            throw new Error('The transaction must include a To and From address(s). Please properly format your data!')
+        }
+
+        if(!transaction.isValid()) {
+            throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
+        }
+
+        this.pendingTransactions.push(transaction); // this is the mempool
+    }
+
+    minePendingTransactions(miningRewardAddress) {
+        const latestBlock = this.getLastBlock(this.getHeight());
+        let i = startCyberdyneChain.this.nonce;
+        let date = Date.now();
+        let block = new Terminator(i, date, this.pendingTransactions, latestBlock.blockHash);
+
+        block.mineBlock(this.difficulty);
+
+        console.log('New Terminator mined! Skynet is growing!');
+        this.skynet_chain.push(block);
+
+        this.pendingTransactions = [
+            new Transaction(null, miningRewardAddress, this.miningReward)
+        ];
+    }
+
+    getBalanceOfAddress(address) {
+        let balance = 0;
+
+        for(const terminator of this.skynet_chain) {
+            for(const transaction of terminator.data){
+                
+                if(terminator.addressFrom === address){
+                    balance -= amount;
+                }
+
+                if(transaction.addressTo === address) {
+                    balance += amount;
+                }
+            }
+        }
+
+        return balance
+    }
+
+    isValid() {
+        for(let i = 1; i < this.skynet_chain.length; i++) {
+            const currentBlock = this.skynet_chain[i];
+            const previousBlock = this.skynet_chain[i -1];
+
+            if(!currentBlock.transactionIsValid()) {
+                return false;
+            }
+
+            if(currentBlock.blockHash !== currentBlock.makeHash()) {
+                console.log('Hash does not compute: ', JSON.stringify(currentBlock));
+                return false;
+            }
+
+            if(currentBlock.prevHash !== previousBlock.makeHash()) {
+                console.log('The previous hash does not match. Check yoself! ', JSON.stringify(currentBlock));
+                return false;
+            }
+
+
+        }
+        return true;
+    }
 }
 
 
@@ -99,35 +192,35 @@ setTimeout(() => {
 
     while(i <= 103) {
         amounts += i;
-        let date = new Date().getTime() / 1000
+        let date = Date.now();
         
-        startCyberDyneChain.addBlock(new Block(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
-    // startCyberDyneChain.addBlock(new Block(3, Date.now(), {sender: "JoMama", receiver: "Ryan of course", amount: 29000}));
-        // if(i == 98) {
-        //     console.log(startCyberDyneChain.getChain());
-        // }
+        startCyberDyneChain.addBlock(new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
         i++
     }
     setTimeout(() => {
         console.log(startCyberDyneChain.getChain()); // returns full chain string 
-    }, 5000);
-// startCyberDyneChain.addBlock(new Block(2, Date.now(), {sender: "JoMama", receiver: "Ryan of course", amount: 29000}));
-// startCyberDyneChain.addBlock(new Block(3, Date.now(), {sender: "JoMama", receiver: "Ryan of course", amount: 29000}));
-// console.log(startCyberDyneChain.getChain());
-}, 20000);
-// startCyberDyneChain.addBlock(new Block(this.id, Date.now(), {sender: "JoMama", receiver: "Ryan of course", amount: 29000}));
-// startCyberDyneChain.addBlock(this.skynet_chain);
-// startCyberDyneChain.addBlock(new Block(this.id, Date.now(), {sender: "JoMama3", receiver: "Ryan of course", amount: 29000}));
-// startCyberDyneChain.addBlock(new Block(this.id, Date.now(), {sender: "JoMama4", receiver: "Ryan of course", amount: 29000}));
-// startCyberDyneChain.addBlock({sender: "YoMoma", receiver: "Ryan of course again", amount: 10000});
-// startCyberDyneChain.addBlock({sender: "Your friend", receiver: "Ryan of course again, again", amount: 10000});
-// startCyberDyneChain.addBlock({sender: "Your friend's friend", receiver: "Ry got it all! ", amount: 120000});
-console.log(JSON.stringify(startCyberDyneChain, null, 15));
+        connectToPeers(startPeers)
+        setTimeout(() => {
+            initHttpServer();
+            
+            setTimeout(() => {
+                initP2PServer(); 
+            }, 2000); // 2000
+
+        }, 2000); // 2000
+        
+    }, 5000); // 5000
+
+}, 20000); // 20000
+
+// console.log(JSON.stringify(startCyberDyneChain, null, 15));
 
 // PORT Assignment local dev
 
 let http_port = process.env.HTTP_PORT || 3010;
 let ptp_port = process.env.HTTP_PORT || 6010;
+let addressOne = `http://localhost:${http_port}`;
+let addressTwo = `http://localhost:${ptp_port}`;
 let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
 
@@ -138,6 +231,8 @@ let MessageType = {
     RESPONSE_BLOCKCHAIN : 2
 };
 let blockchain = startCyberDyneChain.getChain();
+// let cyberHash = startCyberDyneChain
+
 // console.log(blockchain);
 let initHttpServer = () => {
     const app = express();
@@ -150,50 +245,120 @@ let initHttpServer = () => {
 
     app.post('/mine-new-block', (req, res) => {
         let newBlock = req.body.data;
-        startCyberDyneChain.addBlock(newBlock)
-        broadcast(responseLatestMsg());
+        let id = blockchain[blockchain.length -1].id + 1;
+        startCyberDyneChain.addBlock(new Terminator(id, Date.now(), newBlock))
+        // broadcast(responseLatestMsg());
         console.log('block addded: ', JSON.stringify(newBlock));
-        res.send();
+        res.send(JSON.stringify(newBlock));
     });
 
-    app.get('latest-block', (req, res) => {
-        let latest =  startCyberDyneChain.getLastBlock(req);
-
-        console.log('Here is the latest transaction ---> : ', blockchain[blockchain.length -1]);
+    app.get('/latest-block', (req, res) => {
+        let latest =  blockchain[blockchain.length -1];
+        // console.log(lastMinedBlock);
+        res.send(JSON.stringify(latest));
+        // console.log(latest);
+        console.log('Here is the latest transaction ---> : ', latest);
     })
 
     app.get('/peers', (req, res) => {
-        res.send(sockets.map(p => p._socket.remoteAddress, ':', p._socket.remotePorts));
+        // console.log(sockets._socket);
+        sockets.push(req)
+        res.send(200);
+        console.log(sockets);
+        // return sockets;
+        // res.send(sockets.map(s => s._socket.remoteAddress, ':', s._socket.remotePorts));
     });
 
-    app.post('addPeer', (req, res) => {
+    app.post('/add-peer', (req, res) => {
         connectToPeers([req.body.peer]);
-        res.send();
+        res.send(); 
     })
 
     app.listen(http_port, () => console.log('Skynet is alive! \nPort listening on : ', http_port));
 }
 
+const initP2PServer = () => {
+    var server = new WebSocket.Server({port: ptp_port});
+    server.on('connection', ws => initConnection(ws));
+    console.log('Also listening on p2p port: ', ptp_port);
+
+};
+
 const connectToPeers = (newPeers) => {
+    // console.log(newPeers);
     newPeers.forEach(e => {
         const ws = new WebSocket(e);
         ws.on('open', () => initConnection(ws));
+        ws.on('open', () => {
+            console.log('Connected peer hit: ');
+        });
         ws.on('error', () => {
             console.log('Connection to Skynet failed! \n Please restart T1 Specs')
         })
     });
 }
-var initConnection = (ws) => {
+const initConnection = (ws) => {
     sockets.push(ws);
     initMessageHandler(ws);
     initErrorHandler(ws);
     write(ws, queryChainLengthMsg());
 };
-var responseLatestMsg = () => ({
+
+const responseLatestMsg = () => ({
     'type': MessageType.RESPONSE_BLOCKCHAIN,
-    'data': JSON.stringify([getLatestBlock()])
+    'data': JSON.stringify(blockchain)
 });
 
+const initMessageHandler = (ws) => {
+    ws.on('message', (data) => {
+        var message = JSON.parse(data);
+        console.log('We Received a Message from Skynet: ' + JSON.stringify(message));
+        switch (message.type) {
+            case MessageType.QUERY_LATEST:
+                write(ws, responseLatestMsg());
+                break;
+            case MessageType.QUERY_ALL:
+                write(ws, responseChainMsg());
+                break;
+            case MessageType.RESPONSE_BLOCKCHAIN:
+                // console.log(message);
+                handleBlockchainResponse(message);
+                break;
+        }
+    });
+};
+
+const initErrorHandler = (ws) => {
+    var closeConnection = (ws) => {
+        console.log('Connection to Peer Failed: ' + ws.url);
+        sockets.splice(sockets.indexOf(ws), 1);
+    };
+    ws.on('close', () => closeConnection(ws));
+    ws.on('error', () => closeConnection(ws));
+};
+
+var handleBlockchainResponse = (message) => {
+    // console.log('here is the message being passed in:', message)
+    const receivedBlocks = JSON.parse(message.data).sort((b1, b2) => (b1.id - b2.id));
+    var latestBlockReceived = receivedBlocks[receivedBlocks.length - 1];
+    var latestBlockHeld = blockchain[blockchain.length -1];
+    if (latestBlockReceived.index > latestBlockHeld.index) {
+        console.log('blockchain possibly behind. We got: ' + latestBlockHeld.index + ' Peer got: ' + latestBlockReceived.index);
+        if (latestBlockHeld.hash === latestBlockReceived.previousHash) {
+            console.log("We can append the received block to our chain");
+            blockchain.push(latestBlockReceived);
+            broadcast(responseLatestMsg());
+        } else if (receivedBlocks.length === 1) {
+            console.log("We have to query the chain from our peer");
+            broadcast(queryAllMsg());
+        } else {
+            console.log("Received blockchain is longer than current blockchain");
+            replaceChain(receivedBlocks);
+        }
+    } else {
+        console.log('Received blockchain is same length as the current blockchain. Do nothing');
+    }
+};
 
 const write = (ws, message) => ws.send(JSON.stringify(message));
 const broadcast = (message) => sockets.forEach(socket => write(socket, message));
@@ -203,7 +368,10 @@ const broadcast = (message) => sockets.forEach(socket => write(socket, message))
 //     var nextIndex = previousBlock.id + 1;
 //     var nextTimestamp = new Date().getTime() / 1000;
 //     var nextHash = startCyberDyneChain.makeHash(nextIndex, previousBlock.hash, nextTimestamp, blockData);
-//     return new Block(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash);
+//     return new Terminator(nextIndex, previousBlock.hash, nextTimestamp, blockData, nextHash);
 // };
+var queryChainLengthMsg = () => ({'type': MessageType.QUERY_LATEST});
 
-initHttpServer();
+// connectToPeers(startPeers)
+// initHttpServer();
+// initP2PServer(); 
