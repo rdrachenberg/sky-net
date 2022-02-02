@@ -1,5 +1,6 @@
 import React from 'react';
 import { MDBBtn, MDBContainer } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableHead } from 'mdb-react-ui-kit';
 
 function App() {
   return (
@@ -21,21 +22,37 @@ function App() {
           <p className='mb-3'>Welcome to the Revolution</p>
           <img
             className='mb-1'
-            src='https://cdn.pixabay.com/photo/2019/05/22/10/24/power-button-4221127_960_720.jpg'
+            src='https://cdn.pixabay.com/photo/2019/05/22/10/24/power-button-4221127_960_720.jpg' 
+            onClick={() => window.open('http://localhost:3010')}
             style={{ width: 150, height: 45, borderRadius: 10 }}
           />
-          <div></div>
+          <div>
+          <MDBTable>
+          <MDBTableHead>
+          <tr>
+            <th scope='col'>Terminator #</th>
+            <th scope='col'>Time</th>
+            <th scope='col'>Hash</th>
+            <th scope='col'>Previous Hash</th>
+          </tr>
+        </MDBTableHead>
+      </MDBTable>
+          </div>
           <MDBBtn
             tag='a'
             href='http://localhost:3010/latest-block'
-            target='_blank'
+            
             role='button'
             
           >
             Start
           </MDBBtn>
         </div>
+        
       </div>
+      
+      
+        
     </MDBContainer>
   );
 }

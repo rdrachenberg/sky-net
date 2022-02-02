@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const WebSocket = require('ws');
 // const { createWallet } = require('./wallet');
 const {createWallet, validateWallet} = require('./wallet');
+const path = require('path');
+const cors = require('cors');
 // const Block = require('./block');
 
 
@@ -241,15 +243,45 @@ let blockchain = startCyberDyneChain.getChain();
 // console.log(blockchain);
 let initHttpServer = () => {
     const app = express();
+    const corsOptions = {
+        origin: '*',
+        optionsSuccessStatus: 200
+    };
+
+    app.use(cors(corsOptions));
+    app.disable('x-powered-by');
+
+    app.use(function (req, res, next, err) {
+        // Website to allow to connect  || 'http://localhost:3000' 'https://ryan-react-app.herokuapp.com' || 
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        // Request methods to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        // Request headers to allow
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        // True if the website needs to include cookies in the requests sent
+        // to the API (e.g. in case of sessions use)
+        res.setHeader('Access-Control-Allow-Credentials', true);
+        // Pass to next layer of middleware
+        next();
+    });
 
     app.use(bodyParser.json());
+    
+    // Handle React routing, return all requests to React app
+    // app.get('*', function(req, res) {
+    //     res.sendFile(path.join(__dirname, '../frontend/public', 'index.html'));
+    // });
 
     app.get('/', (req, res) => {
         res.send(JSON.stringify(blockchain));
-    })
+        res.sendFile(path.join(__dirname, './frontend/public', 'index.html'));
+        res.redirect('http://localhost:3000');
+        
+    });
 
     app.get('/blocks', (req, res) => {
         res.send(JSON.stringify(blockchain));
+        
     });
 
     app.post('/mine-new-block', (req, res) => {
@@ -264,7 +296,10 @@ let initHttpServer = () => {
     app.get('/latest-block', (req, res) => {
         let latest =  blockchain[blockchain.length -1];
         // console.log(lastMinedBlock);
-        res.send(JSON.stringify(latest));
+        
+        // res.send(JSON.stringify(latest));
+        res.redirect('http://localhost:3000');
+        
         // console.log(latest);
         console.log('Here is the latest transaction ---> : ', latest);
     })
