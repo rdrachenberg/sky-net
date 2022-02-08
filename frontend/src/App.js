@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MDBBtn, MDBContainer } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableHead } from 'mdb-react-ui-kit';
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
+
+
+const client = new W3CWebSocket('ws://127.0.0.1:3010');
+const defaultMessage = 'Here is some default text blase blase'
+// import WebSocket from 'ws';
+// import { createServer } from 'http';
+// import { WebSocketServer } from 'ws';
+
+// const server = createServer();
+// const wss = new WebSocketServer({ noServer: true});
+
+
 
 function App() {
+  
+  
   return (
     <MDBContainer fluid>
       <div
@@ -21,21 +37,37 @@ function App() {
           <p className='mb-3'>Welcome to the Revolution</p>
           <img
             className='mb-1'
-            src='https://cdn.pixabay.com/photo/2019/05/22/10/24/power-button-4221127_960_720.jpg'
+            src='https://cdn.pixabay.com/photo/2019/05/22/10/24/power-button-4221127_960_720.jpg' 
+            onClick={() => window.open('http://localhost:3010')}
             style={{ width: 150, height: 45, borderRadius: 10 }}
           />
-          <div></div>
+          <div>
+          <MDBTable>
+          <MDBTableHead>
+          <tr>
+            <th scope='col'>Terminator #</th>
+            <th scope='col'>Time</th>
+            <th scope='col'>Hash</th>
+            <th scope='col'>Previous Hash</th>
+          </tr>
+        </MDBTableHead>
+      </MDBTable>
+          </div>
           <MDBBtn
             tag='a'
             href='http://localhost:3010/latest-block'
-            target='_blank'
+            
             role='button'
             
           >
             Start
           </MDBBtn>
         </div>
+        
       </div>
+      
+      
+        
     </MDBContainer>
   );
 }
