@@ -11,6 +11,9 @@ const {createWallet, validateWallet} = require('./wallet');
 const path = require('path');
 const cors = require('cors');
 // const Block = require('./block');
+const { createServer } = require('http');
+const { parse } = require('url');
+const { WebSocketServer } = require('ws');
 
 
 class Terminator {
@@ -241,6 +244,22 @@ let blockchain = startCyberDyneChain.getChain();
 // let cyberHash = startCyberDyneChain
 
 // console.log(blockchain);
+const server = createServer();
+const wss1 = new WebSocketServer({ noServer: true})
+wss1.on('connection', function connection(ws) {
+    ws.send(blockchain);
+    console.log(blockchain);
+});
+
+server.on('upgrade', function upgrade(request, socket, head) {
+    const { pathname } = parse(request.url);
+
+    if(pathname === '/latest-block'){
+        wss1.handleUpgrade(request, socket, head, function done(ws){
+            wss1.emit('connection', ws, request);
+        });
+    }
+})
 let initHttpServer = () => {
     const app = express();
     const corsOptions = {
@@ -261,6 +280,7 @@ let initHttpServer = () => {
         // True if the website needs to include cookies in the requests sent
         // to the API (e.g. in case of sessions use)
         res.setHeader('Access-Control-Allow-Credentials', true);
+
         // Pass to next layer of middleware
         next();
     });
@@ -273,14 +293,33 @@ let initHttpServer = () => {
     // });
 
     app.get('/', (req, res) => {
-        res.send(JSON.stringify(blockchain));
-        res.sendFile(path.join(__dirname, './frontend/public', 'index.html'));
-        res.redirect('http://localhost:3000');
+        // const server = createServer();
+        // const wss1 = new WebSocketServer({ noServer: true})
+        // res.send(blockchain, res.redirect('http:localhost:3000'));
+        res.status(200).send(blockchain);
+        // res.sendFile(path.join(__dirname, '/frontend/public', 'index.html'));
+        // res.redirect('http://localhost:3000');
+        // wss1.on('connection', function connection(ws) {
+        //     console.log('freaking connection made');
+        //     ws.send(blockchain);
+        //     console.log(blockchain);
+        // });
+
+        // server.on('upgrade', function upgrade(request, socket, head) {
+        //     const { pathname } = parse(request.url);
+
+        //     if(pathname === '/latest-block'){
+        //         wss1.handleUpgrade(request, socket, head, function done(ws){
+        //             console.log(ws);
+        //             wss1.emit('connection', ws, request);
+        //         });
+        //     }
+        // });
         
     });
 
     app.get('/blocks', (req, res) => {
-        res.send(JSON.stringify(blockchain));
+        res.send(blockchain);
         
     });
 
@@ -298,8 +337,10 @@ let initHttpServer = () => {
         // console.log(lastMinedBlock);
         
         // res.send(JSON.stringify(latest));
-        res.redirect('http://localhost:3000');
+        // res.redirect('http://localhost:3000');
+        res.send(latest);
         
+        // initMessageHandler('message',(latest));
         // console.log(latest);
         console.log('Here is the latest transaction ---> : ', latest);
     })
@@ -330,6 +371,7 @@ const connectToPeers = (newPeers) => {
         ws.on('open', () => initConnection(ws));
         ws.on('open', () => {
             console.log('Connected peer hit: ');
+            ws.send(blockchain);
         });
         ws.on('error', () => {
             console.log('Connection to Skynet failed! \n Please restart T1 Specs')
@@ -349,22 +391,12 @@ const responseLatestMsg = () => ({
 });
 
 const initMessageHandler = (ws) => {
-    ws.on('message', (data) => {
-        var message = JSON.parse(data);
-        console.log('We Received a Message from Skynet: ' + JSON.stringify(message));
-        switch (message.type) {
-            case MessageType.QUERY_LATEST:
-                write(ws, responseLatestMsg());
-                break;
-            case MessageType.QUERY_ALL:
-                write(ws, responseChainMsg());
-                break;
-            case MessageType.RESPONSE_BLOCKCHAIN:
-                // console.log(message);
-                handleBlockchainResponse(message);
-                break;
-        }
-    });
+   ws.on('connection', function connection(ws){
+       ws.on('message', function message(data) {
+           console.log('Got the following WS data: ', data);
+       });
+       ws.send(blockchain);
+   })
 };
 
 const initErrorHandler = (ws) => {

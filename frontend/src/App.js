@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MDBBtn, MDBContainer } from 'mdb-react-ui-kit';
 import { MDBTable, MDBTableHead } from 'mdb-react-ui-kit';
+import { w3cwebsocket as W3CWebSocket } from 'websocket';
+
+
+const client = new W3CWebSocket('ws://127.0.0.1:3010');
+const defaultMessage = 'Here is some default text blase blase'
+// import WebSocket from 'ws';
+// import { createServer } from 'http';
+// import { WebSocketServer } from 'ws';
+
+// const server = createServer();
+// const wss = new WebSocketServer({ noServer: true});
+
+
 
 function App() {
+  
+  
   return (
     <MDBContainer fluid>
       <div
