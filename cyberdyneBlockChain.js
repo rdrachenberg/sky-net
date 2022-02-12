@@ -258,7 +258,7 @@ let initHttpServer = (server) => {
 
    setInterval(() => {
        io.to('data-room').emit('data', JSON.stringify(blockchain))
-   }, 1000)
+   }, 10000)
 
    server.listen(http_port, (err) => {
     if(err) {

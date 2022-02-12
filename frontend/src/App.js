@@ -7,7 +7,9 @@ import {io} from 'socket.io-client';
 const defaultMessage = 'Here is some default text blase blase'
 
 const App = () => {
-  const [data, setData] = React.useState('fetching')
+
+  const [data, setData] = React.useState('working...');
+  const [working, setWorking] = React.useState(false);
 
   React.useEffect(() => {
     const socket = io('http://localhost:3010');
@@ -22,6 +24,7 @@ const App = () => {
     })
     
     socket.on('data', (data) => {
+      setWorking(true);
       setData(data);
     })
 
@@ -60,14 +63,19 @@ const App = () => {
             <th scope='col'>Hash</th>
             <th scope='col'>Previous Hash</th>
           </tr>
-          <tr>
-            <td>{data[7]}</td>
-            <td>{data.timestamp}</td>
-            <td>{data.blockHash}</td>
-            <td>{data.prevHash}</td>
-          </tr>
+          
+         
         </MDBTableHead>
+        {/* {data.map((data) => 
+            <tr key={data.id}>
+              <td>{data.timestamp}</td>
+              <td>{data.id}</td>
+              <td>{data.id}</td>
+              <td>{data.id}</td>
+            </tr>
+          )} */}
       </MDBTable>
+      
           </div>
           <MDBBtn
             tag='a'
@@ -79,11 +87,16 @@ const App = () => {
             Start
           </MDBBtn>
         </div>
-        
-        
       </div>
       <div>
-      <h4>{data}</h4>
+      {working? (
+       
+       <h5>{[data]}</h5>
+      ) : (
+        <h4>Working...</h4>
+      )}
+
+      
       </div>
       
       
