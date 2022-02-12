@@ -1,22 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { MDBBtn, MDBContainer } from 'mdb-react-ui-kit';
 import { MDBTable, MDBTableHead } from 'mdb-react-ui-kit';
-import { w3cwebsocket as W3CWebSocket } from 'websocket';
+import {io} from 'socket.io-client';
 
 
-const client = new W3CWebSocket('ws://127.0.0.1:3010');
 const defaultMessage = 'Here is some default text blase blase'
-// import WebSocket from 'ws';
-// import { createServer } from 'http';
-// import { WebSocketServer } from 'ws';
 
-// const server = createServer();
-// const wss = new WebSocketServer({ noServer: true});
+const App = () => {
+  const [data, setData] = React.useState('fetching')
 
+  React.useEffect(() => {
+    const socket = io('http://localhost:3010');
 
+    socket.on('connect', () => {
+      console.log(socket.id);
+    })
 
-function App() {
-  
+    socket.on('connect_error', () => {
+      setTimeout(() => {
+        socket.connect()}, 5000)
+    })
+    
+    socket.on('data', (data) => {
+      setData(data);
+    })
+
+    socket.on('disconnect', () => {
+      setData('server disconnected!')
+    })
+  })
   
   return (
     <MDBContainer fluid>
@@ -25,9 +37,7 @@ function App() {
         style={{ height: '100vh' }}
       >
         <div className='text-center'>
-        <h3 className='mb-3'>
-            Cyberdyne Systems
-          </h3>
+        <h3 className='mb-3'>Cyberdyne Systems</h3>
           <img
             className='mb-4'
             src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
@@ -50,6 +60,12 @@ function App() {
             <th scope='col'>Hash</th>
             <th scope='col'>Previous Hash</th>
           </tr>
+          <tr>
+            <td>{data[7]}</td>
+            <td>{data.timestamp}</td>
+            <td>{data.blockHash}</td>
+            <td>{data.prevHash}</td>
+          </tr>
         </MDBTableHead>
       </MDBTable>
           </div>
@@ -64,6 +80,10 @@ function App() {
           </MDBBtn>
         </div>
         
+        
+      </div>
+      <div>
+      <h4>{data}</h4>
       </div>
       
       
@@ -73,3 +93,84 @@ function App() {
 }
 
 export default App;
+// import WebSocket from 'ws';
+// // import { createServer } from 'http';
+// // import { WebSocketServer } from 'ws';
+
+// // const server = createServer();
+// // const wss = new WebSocket('ws://localhost:3010');
+// // const ws = useWebSocket({
+// //   socketUrl: 'ws://localhost:3010'
+// // });
+// function useWebSocketLite({
+//   socketUrl,
+//   retry: defaultRetry = 3,
+//   retryInterval = 1500
+// }) {
+
+//  // message and timestamp
+//  const [data, setData] = useState();
+//  // send function
+//  const [send, setSend] = useState(() => () => undefined);
+//  // state of our connection
+//  const [retry, setRetry] = useState(defaultRetry);
+//  // retry counter
+//  const [readyState, setReadyState] = useState(false);
+
+//  useEffect(() => {
+//    const ws = new WebSocket(socketUrl);
+//    ws.onopen = () => {
+//      console.log('Connected to socket');
+//      setReadyState(true);
+
+//      // function to send messages
+//      setSend(() => {
+//        return (data) => {
+//          try {
+//            const d = JSON.stringify(data);
+//            ws.send(d);
+//            return true;
+//          } catch (err) {
+//            return false;
+//          }
+//        };
+//      });
+
+//      // receive messages
+//      ws.onmessage = (event) => {
+//        const msg = formatMessage(event.data);
+//        setData({ message: msg, timestamp: getTimestamp() });
+//      };
+//    };
+
+//    // on close we should update connection state
+//    // and retry connection
+//    ws.onclose = () => {
+//      setReadyState(false);
+//      // retry logic
+//      if (retry > 0) {
+//        setTimeout(() => {
+//          setRetry((retry) => retry - 1);
+//        }, retryInterval);
+//      }
+//    };
+//     // terminate connection on unmount
+//    return () => {
+//      ws.close();
+//    };
+//  // retry dependency here triggers the connection attempt
+//  }, [retry]); 
+
+//  return { send, data, readyState };
+// }
+
+// // small utilities that we need
+// // handle json messages
+// function formatMessage(data) {
+//  try {
+//    const parsed = JSON.parse(data);
+//    return parsed;
+//  } catch (err) {
+//    return data;
+//  }
+// }

@@ -11,9 +11,12 @@ const {createWallet, validateWallet} = require('./wallet');
 const path = require('path');
 const cors = require('cors');
 // const Block = require('./block');
-const { createServer } = require('http');
+const http = require('http');
 const { parse } = require('url');
 const { WebSocketServer } = require('ws');
+const socketIo = require('socket.io')
+const app = express();
+const server = http.createServer(app);
 
 
 class Terminator {
@@ -197,31 +200,32 @@ setTimeout(() => { // here is where we set the first message delays and mint the
     let i = 2;
     let amounts = 1;
 
-    while(i <= 100) {
+    while(i <= 10) {
         amounts += i;
         let date = Date.now();
         
         startCyberDyneChain.addBlock(new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
         i++
     }
+    /* commenting out for development  */
     setTimeout(() => {
         console.log(startCyberDyneChain.getChain()); // returns full chain string 
-        connectToPeers(startPeers)
+        // connectToPeers(startPeers) //need to uncomment 
         setTimeout(() => {
-            initHttpServer();
+            initHttpServer(server);
             
             setTimeout(() => {
-                initP2PServer(); 
+                // initP2PServer(); 
 
                 // const bobWallet = createWallet();
                 // const aliceWallet = createWallet();
-            }, 1000); // 2000
+            }, 500); // 2000
 
-        }, 1000); // 2000
+        }, 500); // 2000
         
-    }, 1000); // 5000
+    }, 500); // 5000
 
-}, 1000); // 20000
+}, 500); // 20000
 
 // console.log(JSON.stringify(startCyberDyneChain, null, 15));
 
@@ -233,35 +237,46 @@ let addressOne = `http://localhost:${http_port}`;
 let addressTwo = `http://localhost:${ptp_port}`;
 let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
-
-let sockets = [];
-let MessageType = {
-    QUERY_LATEST : 0,
-    QUERY_ALL : 1,
-    RESPONSE_BLOCKCHAIN : 2
-};
 let blockchain = startCyberDyneChain.getChain();
-// let cyberHash = startCyberDyneChain
-
 // console.log(blockchain);
-const server = createServer();
-const wss1 = new WebSocketServer({ noServer: true})
-wss1.on('connection', function connection(ws) {
-    ws.send(blockchain);
-    console.log(blockchain);
-});
 
-server.on('upgrade', function upgrade(request, socket, head) {
-    const { pathname } = parse(request.url);
+let initHttpServer = (server) => {
+   const io = socketIo(server, {
+       cors: {
+           origin: 'http://localhost:3000'
+       }
+   })
 
-    if(pathname === '/latest-block'){
-        wss1.handleUpgrade(request, socket, head, function done(ws){
-            wss1.emit('connection', ws, request);
-        });
+   io.on('connection', socket => {
+       console.log('client connected: ', socket.id);
+    //    console.log(blockchain);
+       socket.join('data-room');
+       socket.on('disconnect', (reason) => {
+           console.log(reason);
+       })
+   })
+
+   setInterval(() => {
+       io.to('data-room').emit('data', JSON.stringify(blockchain))
+   }, 1000)
+
+   server.listen(http_port, (err) => {
+    if(err) {
+        console.log(err);
     }
-})
-let initHttpServer = () => {
-    const app = express();
+
+    console.log('skynet running on port: ', http_port);
+   })
+}
+
+
+
+module.exports = {CyberDyneChain};
+
+/*
+ const app = express();
+    const server = createServer(app);
+   
     const corsOptions = {
         origin: '*',
         optionsSuccessStatus: 200
@@ -286,36 +301,10 @@ let initHttpServer = () => {
     });
 
     app.use(bodyParser.json());
-    
-    // Handle React routing, return all requests to React app
-    // app.get('*', function(req, res) {
-    //     res.sendFile(path.join(__dirname, '../frontend/public', 'index.html'));
-    // });
 
     app.get('/', (req, res) => {
-        // const server = createServer();
-        // const wss1 = new WebSocketServer({ noServer: true})
-        // res.send(blockchain, res.redirect('http:localhost:3000'));
         res.status(200).send(blockchain);
-        // res.sendFile(path.join(__dirname, '/frontend/public', 'index.html'));
-        // res.redirect('http://localhost:3000');
-        // wss1.on('connection', function connection(ws) {
-        //     console.log('freaking connection made');
-        //     ws.send(blockchain);
-        //     console.log(blockchain);
-        // });
 
-        // server.on('upgrade', function upgrade(request, socket, head) {
-        //     const { pathname } = parse(request.url);
-
-        //     if(pathname === '/latest-block'){
-        //         wss1.handleUpgrade(request, socket, head, function done(ws){
-        //             console.log(ws);
-        //             wss1.emit('connection', ws, request);
-        //         });
-        //     }
-        // });
-        
     });
 
     app.get('/blocks', (req, res) => {
@@ -327,21 +316,16 @@ let initHttpServer = () => {
         let newBlock = req.body.data;
         let id = blockchain[blockchain.length -1].id + 1;
         startCyberDyneChain.addBlock(new Terminator(id, Date.now(), newBlock))
-        // broadcast(responseLatestMsg());
+        
         console.log('block addded: ', JSON.stringify(startCyberDyneChain.getLastBlock()));
         res.send(JSON.stringify(newBlock));
     });
 
     app.get('/latest-block', (req, res) => {
         let latest =  blockchain[blockchain.length -1];
-        // console.log(lastMinedBlock);
         
-        // res.send(JSON.stringify(latest));
-        // res.redirect('http://localhost:3000');
         res.send(latest);
         
-        // initMessageHandler('message',(latest));
-        // console.log(latest);
         console.log('Here is the latest transaction ---> : ', latest);
     })
 
@@ -355,12 +339,31 @@ let initHttpServer = () => {
     })
 
     app.listen(http_port, () => console.log('Skynet is alive! \nPort listening on : ', http_port));
-}
+    initP2PServer(server)
 
-const initP2PServer = () => {
-    var server = new WebSocket.Server({port: ptp_port});
-    server.on('connection', ws => initConnection(ws));
+    const initP2PServer = (server) => {
+    // var server = createServer()
+    const wss1 = new WebSocketServer({noServer: true});
+    
+    wss1.on('connection', function connection(){
+        ws.send(blockchain);
+    });
+
+    server.on('upgrade', function upgrade(request, socket, head) {
+        const {pathname} = parse(request.url);
+        
+        if(pathname === '/latest-block') {
+            ws.handleUpgrade(requeswt, socket, head, function done(ws) {
+                ws.emit('connection', ws, request);
+            })
+
+        } else {
+            socket.destroy();
+        }     
+    })
+    // server.listen(6010);
     console.log('Also listening on p2p port: ', ptp_port);
+
 
 };
 
@@ -379,10 +382,10 @@ const connectToPeers = (newPeers) => {
     });
 }
 const initConnection = (ws) => {
-    sockets.push(ws);
-    initMessageHandler(ws);
-    initErrorHandler(ws);
-    write(ws, queryChainLengthMsg());
+    const server = createServer();
+    
+    console.log('This was freaking hit');
+
 };
 
 const responseLatestMsg = () => ({
@@ -446,5 +449,4 @@ var queryChainLengthMsg = () => ({'type': MessageType.QUERY_LATEST});
 // connectToPeers(startPeers)
 // initHttpServer();
 // initP2PServer(); 
-
-module.exports = {CyberDyneChain};
+*/
