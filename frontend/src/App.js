@@ -1,6 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { MDBBtn, MDBContainer } from 'mdb-react-ui-kit';
-import { MDBTable, MDBTableHead } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer  } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
 
 
@@ -8,8 +7,8 @@ const defaultMessage = 'Here is some default text blase blase'
 
 const App = () => {
 
-  const [data, setData] = React.useState('working...');
-  const [working, setWorking] = React.useState(false);
+  const [data, setData] = useState([]);
+  const [working, setWorking] = useState(false);
 
   React.useEffect(() => {
     const socket = io('http://localhost:3010');
@@ -20,11 +19,14 @@ const App = () => {
 
     socket.on('connect_error', () => {
       setTimeout(() => {
-        socket.connect()}, 5000)
+        socket.connect()}, 10000)
     })
     
     socket.on('data', (data) => {
       setWorking(true);
+      
+      data = JSON.parse(data);
+      // console.log(data);
       setData(data);
     })
 
@@ -56,45 +58,41 @@ const App = () => {
           />
           <div>
           <MDBTable>
-          <MDBTableHead>
-          <tr>
-            <th scope='col'>Terminator #</th>
-            <th scope='col'>Time</th>
-            <th scope='col'>Hash</th>
-            <th scope='col'>Previous Hash</th>
-          </tr>
-          
-         
-        </MDBTableHead>
-        {/* {data.map((data) => 
-            <tr key={data.id}>
-              <td>{data.timestamp}</td>
-              <td>{data.id}</td>
-              <td>{data.id}</td>
-              <td>{data.id}</td>
+            <MDBTableHead>
+            <tr>
+              <th scope='col'>Terminator #</th>
+              <th scope='col'>Time</th>
+              <th scope='col'>Hash</th>
+              <th scope='col'>Previous Hash</th>
             </tr>
-          )} */}
+          </MDBTableHead>
+          <MDBTableBody>
+        {working? (
+          <tr scope='row'>
+            {data.map((item) => {
+              const { id, timestamp, nonce, blockHash, prevHash, data} = item;
+              return (
+                <tr key = {id} >
+                  <td>{id}</td>
+                  <td>{timestamp}</td>
+                  <td>{blockHash}</td>
+                </tr>
+              )
+            })}
+          </tr>
+        ) : (
+          <tr>
+            <td>Working...</td>
+          </tr>
+        )}
+        </MDBTableBody>
       </MDBTable>
-      
           </div>
-          <MDBBtn
-            tag='a'
-            href='http://localhost:3010/latest-block'
-            
-            role='button'
-            
-          >
-            Start
-          </MDBBtn>
+          <MDBBtn tag='a' href='http://localhost:3010/latest-block' role='button'>Start</MDBBtn>
         </div>
       </div>
       <div>
-      {working? (
-       
-       <h5>{[data]}</h5>
-      ) : (
-        <h4>Working...</h4>
-      )}
+      
 
       
       </div>
@@ -104,7 +102,7 @@ const App = () => {
     </MDBContainer>
   );
 }
-
+  
 export default App;
 // import WebSocket from 'ws';
 // // import { createServer } from 'http';
