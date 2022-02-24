@@ -9,3 +9,35 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container {
+  display: flex;
+  margin: 5%;
+  padding: 5%;
+  align-items: stretch;
+}
+
+#table-container {
+  width:  80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table-responsive {
+  table-layout: fixed;
+}
+
+td {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+td:hover{
+  overflow: visible;
+  
+}
+
+tr:hover {
+  background-color: aquamarine;
+}

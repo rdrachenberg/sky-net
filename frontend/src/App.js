@@ -5,24 +5,24 @@ import {io} from 'socket.io-client';
 
 const defaultMessage = 'Here is some default text blase blase'
 
+
 const App = () => {
 
   const [data, setData] = useState([]);
   const [working, setWorking] = useState(false);
+  const [messages, setMessages] = useState(['this is here'])
+  const [latest, setLatest] = useState([])
 
   React.useEffect(() => {
-    const socket = io('http://localhost:3010');
+    const socket = io('http://localhost:3010', {transports: ['websocket']});
+    const latest = () => socket.emit('last-block', data);
 
     socket.on('connect', () => {
       console.log(socket.id);
     })
 
-    socket.on('connect_error', () => {
-      setTimeout(() => {
-        socket.connect()}, 10000)
-    })
-    
     socket.on('data', (data) => {
+      setMessages('This is here')
       setWorking(true);
       
       data = JSON.parse(data);
@@ -30,13 +30,31 @@ const App = () => {
       setData(data);
     })
 
+    socket.on('outgoing-last', (data) => {
+      
+      data = JSON.parse(latest());
+      setData([])
+      setData(data)
+    })
+
+    socket.on('connect_error', () => {
+      setTimeout(() => {
+        socket.connect()}, 10000)
+    })
+
     socket.on('disconnect', () => {
       setData('server disconnected!')
     })
-  })
+
+    return () => {
+      socket.disconnect();
+    }
+    }, []
+  )
   
   return (
-    <MDBContainer fluid>
+    <div className='container'>
+    <MDBContainer>
       <div
         className='d-flex justify-content-center align-items-center'
         style={{ height: '100vh' }}
@@ -56,51 +74,41 @@ const App = () => {
             onClick={() => window.open('http://localhost:3010')}
             style={{ width: 150, height: 45, borderRadius: 10 }}
           />
-          <div>
-          <MDBTable>
-            <MDBTableHead>
+          <div id='table-container'>
+          <MDBTable className='table-responsive'>
+            <MDBTableHead dark>
             <tr>
-              <th scope='col'>Terminator #</th>
+              <th scope='col'>Terminator#</th>
               <th scope='col'>Time</th>
               <th scope='col'>Hash</th>
               <th scope='col'>Previous Hash</th>
             </tr>
           </MDBTableHead>
-          <MDBTableBody>
-        {working? (
-          <tr scope='row'>
-            {data.map((item) => {
-              const { id, timestamp, nonce, blockHash, prevHash, data} = item;
-              return (
-                <tr key = {id} >
-                  <td>{id}</td>
-                  <td>{timestamp}</td>
-                  <td>{blockHash}</td>
-                </tr>
-              )
-            })}
-          </tr>
-        ) : (
-          <tr>
-            <td>Working...</td>
-          </tr>
-        )}
-        </MDBTableBody>
-      </MDBTable>
-          </div>
-          <MDBBtn tag='a' href='http://localhost:3010/latest-block' role='button'>Start</MDBBtn>
+          <tbody>
+                {data.map((item) => {
+                  const { id, timestamp, nonce, blockHash, prevHash, data} = item;
+                  const {sender, receiver, amount} = data;
+                  return (
+                    <tr key = {id} >
+                      <td>{id}</td>
+                      <td>{timestamp}</td>
+                      <td>{blockHash}</td>
+                      <td>{prevHash}</td>
+                    </tr>
+                  )
+                })}
+        </tbody>
+        </MDBTable>
         </div>
+        <MDBBtn tag='a' role='button' onClick={() => {
+          console.log('I was freaking clickeed button')
+        }}>Start</MDBBtn>
       </div>
-      <div>
-      
-
-      
-      </div>
-      
-      
-        
+      </div>    
     </MDBContainer>
+    </div>
   );
+  
 }
   
 export default App;

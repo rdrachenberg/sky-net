@@ -94,8 +94,9 @@ class CyberDyneChain {
     mineGenesisBlock() {
         this.initMessages();
         let firstHash = this.createHash('starting T1 Models');
-        
-        return new Terminator(1, Date.now(), 'Initiating Cyberdyne Systems...', firstHash);
+        console.log(firstHash);
+        // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
+        return new Terminator(1, Date.now(), JSON.stringify({data: {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}}), null);
     }
     
     createHash(toHash) {
@@ -238,6 +239,7 @@ let addressTwo = `http://localhost:${ptp_port}`;
 let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
 let blockchain = startCyberDyneChain.getChain();
+let last = startCyberDyneChain.getLastBlock();
 // console.log(blockchain);
 
 let initHttpServer = (server) => {
@@ -248,17 +250,23 @@ let initHttpServer = (server) => {
    })
 
    io.on('connection', socket => {
-       console.log('client connected: ', socket.id);
+        console.log('client connected: ', socket.id);
     //    console.log(blockchain);
-       socket.join('data-room');
-       socket.on('disconnect', (reason) => {
+        socket.join('data-room');
+        
+        socket.on('last-block', (lastBlock) => {
+            lastBlock = last;
+            socket.broadcast.emit('outgoing-last', {data: lastBlock})
+        } )
+        
+        socket.on('disconnect', (reason) => {
            console.log(reason);
        })
    })
 
    setInterval(() => {
        io.to('data-room').emit('data', JSON.stringify(blockchain))
-   }, 10000)
+   }, 2000)
 
    server.listen(http_port, (err) => {
     if(err) {
