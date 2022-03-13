@@ -1,6 +1,7 @@
-import React, { Component, useState, useEffect } from 'react';
-import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer  } from 'mdb-react-ui-kit';
+import  { Component, useState, useEffect, useCallback, Fragment } from 'react';
+import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol  } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
+import { emit } from 'process';
 
 
 const defaultMessage = 'Here is some default text blase blase'
@@ -12,30 +13,62 @@ const App = () => {
   const [working, setWorking] = useState(false);
   const [messages, setMessages] = useState(['this is here'])
   const [latest, setLatest] = useState([])
+  const [fullChain, setFullChain] = useState([])
+  
+  var socket = io('http://localhost:3010', {transports: ['websocket']});
 
-  React.useEffect(() => {
-    const socket = io('http://localhost:3010', {transports: ['websocket']});
-    const latest = () => socket.emit('last-block', data);
+  const handleLastClick = () => {
+    socket.emit('last');
+    let lengthResult = data.length -1;
+    let newData = [data[lengthResult]];
+
+    console.log('our last button click was clicked');
+    console.log(data);
+    // console.log('second data here --->\n', newData);
+    //     setData([]);
+    setData(newData);
+  
+  }
+
+  const handleGetFullClick = () => {
+    let wholeChain = fullChain;
+    console.log('This is the full chain button click  ---->\n', wholeChain );
+
+    setData(wholeChain);
+
+  }
+
+  const handleAddBlockClick = () => {
+    console.log('That handle Add Block Click button was clicked')
+  }
+  useEffect(() => {
+    
+    // const socket = io('http://localhost:3010', {transports: ['websocket']});
 
     socket.on('connect', () => {
       console.log(socket.id);
     })
+    // socket.on('last', (data) => {
+    //   console.log('socket on last was hit');
+    //   setData(data);
+    // })
 
     socket.on('data', (data) => {
       setMessages('This is here')
-      setWorking(true);
-      
       data = JSON.parse(data);
-      // console.log(data);
+
+      if(!working) {
+        setFullChain(data)
+      }
+
+      setWorking(true);
+      console.log(data);
+      
       setData(data);
+      
     })
 
-    socket.on('outgoing-last', (data) => {
-      
-      data = JSON.parse(latest());
-      setData([])
-      setData(data)
-    })
+    
 
     socket.on('connect_error', () => {
       setTimeout(() => {
@@ -55,10 +88,8 @@ const App = () => {
   return (
     <div className='container'>
     <MDBContainer>
-      <div
-        className='d-flex justify-content-center align-items-center'
-        style={{ height: '100vh' }}
-      >
+      <div className='d-flex justify-content-center align-items-center'style={{ height: '100vh' }}
+>
         <div className='text-center'>
         <h3 className='mb-3'>Cyberdyne Systems</h3>
           <img
@@ -68,12 +99,18 @@ const App = () => {
           />
           
           <p className='mb-3'>Welcome to the Revolution</p>
-          <img
-            className='mb-1'
-            src='https://cdn.pixabay.com/photo/2019/05/22/10/24/power-button-4221127_960_720.jpg' 
-            onClick={() => window.open('http://localhost:3010')}
-            style={{ width: 150, height: 45, borderRadius: 10 }}
-          />
+          
+          <div id='button-div' className='d-flex align-items-start mb-3'>
+            <MDBCol>
+              <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
+            </MDBCol>
+            <MDBCol>
+              <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
+            </MDBCol>
+            <MDBCol>
+              <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
+            </MDBCol>
+          </div>
           <div id='table-container'>
           <MDBTable className='table-responsive'>
             <MDBTableHead dark>
@@ -100,10 +137,20 @@ const App = () => {
         </tbody>
         </MDBTable>
         </div>
-        <MDBBtn tag='a' role='button' onClick={() => {
-          console.log('I was freaking clickeed button')
-        }}>Start</MDBBtn>
-      </div>
+        
+        <div id='button-div' className='d-flex align-items-start mb-3'>
+          <MDBCol>
+            <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
+          </MDBCol>
+          <MDBCol>
+            <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
+          </MDBCol>
+          <MDBCol>
+            <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
+          </MDBCol>
+        </div>
+        
+        </div>
       </div>    
     </MDBContainer>
     </div>

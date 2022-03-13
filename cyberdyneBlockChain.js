@@ -240,34 +240,44 @@ let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 
 let blockchain = startCyberDyneChain.getChain();
 let last = startCyberDyneChain.getLastBlock();
-// console.log(blockchain);
+
+let idHolder = (last.id + 1);
+
+// let addOneBlock = startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
 
 let initHttpServer = (server) => {
    const io = socketIo(server, {
        cors: {
            origin: 'http://localhost:3000'
        }
-   })
+    })
 
-   io.on('connection', socket => {
+    io.on('connection', socket => {
         console.log('client connected: ', socket.id);
     //    console.log(blockchain);
         socket.join('data-room');
-        
-        socket.on('last-block', (lastBlock) => {
-            lastBlock = last;
-            socket.broadcast.emit('outgoing-last', {data: lastBlock})
-        } )
-        
+
+        // socket.on('last', () => {
+        //     console.log(last)
+        //     console.log('this is that last var ---> \n', last);
+        //     socket.to('data-room').emit('data', JSON.stringify(last));
+        // })
+
         socket.on('disconnect', (reason) => {
            console.log(reason);
        })
-   })
-
-   setInterval(() => {
-       io.to('data-room').emit('data', JSON.stringify(blockchain))
-   }, 2000)
-
+    })
+    
+    // io.on('last', (socket) => {
+    //     console.log(last)
+    //     console.log('this is that last var ---> \n', last);
+    //     socket.to('data-room').emit('data', JSON.stringify(last));
+    // })
+   
+    setTimeout(() => {
+        io.to('data-room').emit('data', JSON.stringify(blockchain));
+    }, 3000);
+   
    server.listen(http_port, (err) => {
     if(err) {
         console.log(err);
@@ -275,6 +285,8 @@ let initHttpServer = (server) => {
 
     console.log('skynet running on port: ', http_port);
    })
+
+//    clearInterval(runOnce);
 }
 
 
