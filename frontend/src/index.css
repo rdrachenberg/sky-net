@@ -34,10 +34,13 @@ td {
 }
 
 td:hover{
-  overflow: visible;
+  
+  font-weight: bolder;
+  z-index: +1;
   
 }
 
 tr:hover {
   background-color: aquamarine;
+  z-index: -1;
 }

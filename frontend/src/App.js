@@ -1,5 +1,5 @@
 import  { Component, useState, useEffect, useCallback, Fragment } from 'react';
-import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol  } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol, MDBRow, MDBIcon } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
 import { emit } from 'process';
 
@@ -23,7 +23,7 @@ const App = () => {
     let newData = [data[lengthResult]];
 
     console.log('our last button click was clicked');
-    console.log(data);
+    console.log(newData);
     // console.log('second data here --->\n', newData);
     //     setData([]);
     setData(newData);
@@ -40,18 +40,16 @@ const App = () => {
 
   const handleAddBlockClick = () => {
     console.log('That handle Add Block Click button was clicked')
+    socket.emit('add-block');
+    // socket.emit('data');
   }
   useEffect(() => {
     
     // const socket = io('http://localhost:3010', {transports: ['websocket']});
 
-    socket.on('connect', () => {
+    socket.on('connection', () => {
       console.log(socket.id);
     })
-    // socket.on('last', (data) => {
-    //   console.log('socket on last was hit');
-    //   setData(data);
-    // })
 
     socket.on('data', (data) => {
       setMessages('This is here')
@@ -68,8 +66,6 @@ const App = () => {
       
     })
 
-    
-
     socket.on('connect_error', () => {
       setTimeout(() => {
         socket.connect()}, 10000)
@@ -77,7 +73,12 @@ const App = () => {
 
     socket.on('disconnect', () => {
       setData('server disconnected!')
+      console.log('server is disconnected! *')
     })
+
+    // socket.on('add-block', () => {
+    //   socket.emit('add-block');
+    // })
 
     return () => {
       socket.disconnect();
@@ -112,10 +113,10 @@ const App = () => {
             </MDBCol>
           </div>
           <div id='table-container'>
-          <MDBTable className='table-responsive'>
+          <MDBTable striped className='table-responsive'>
             <MDBTableHead dark>
             <tr>
-              <th scope='col'>Terminator#</th>
+              <th scope='col' maxwidth={'5px'}>Terminator#</th>
               <th scope='col'>Time</th>
               <th scope='col'>Hash</th>
               <th scope='col'>Previous Hash</th>
@@ -148,10 +149,61 @@ const App = () => {
           <MDBCol>
             <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
           </MDBCol>
+          
         </div>
+        <MDBRow></MDBRow>
+        <div>
+        <MDBRow>
+        <MDBCol></MDBCol>
+        <MDBCol>
+          <form>
+            <p className="h4 text-center mb-4">Submit transaction</p>
+            <label htmlFor="from" className="grey-text">
+              From
+            </label>
+            <input
+              type="text"
+              id="from"
+              className="form-control"
+            />
+            <br />
+            <label htmlFor="to" className="grey-text">
+              To
+            </label>
+            <input
+              type="text"
+              id="to"
+              className="form-control"
+            />
+            <br />
+            <label htmlFor="amount" className="grey-text">
+              Amount
+            </label>
+            <input
+              type="text"
+              id="amount"
+              className="form-control"
+            />
+            <br />
+            
+            <div className="text-center mt-4">
+              <MDBBtn color="success" type="submit">
+                Send
+                <MDBIcon far icon="paper-plane" className="ml-2" />
+              </MDBBtn>
+            </div>
+          </form>
+        </MDBCol>
+        <MDBCol></MDBCol>
+      </MDBRow>
+      </div>
+        </div>
+
         
-        </div>
-      </div>    
+      </div>
+      
+      
+        
     </MDBContainer>
     </div>
   );

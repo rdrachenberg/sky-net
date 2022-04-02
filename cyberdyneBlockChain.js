@@ -241,7 +241,8 @@ let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 let blockchain = startCyberDyneChain.getChain();
 let last = startCyberDyneChain.getLastBlock();
 
-let idHolder = (last.id + 1);
+let idHolder = 10;
+
 
 // let addOneBlock = startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
 
@@ -252,30 +253,27 @@ let initHttpServer = (server) => {
        }
     })
 
-    io.on('connection', socket => {
-        console.log('client connected: ', socket.id);
+    io.on("connection", socket => {
+        console.log("client connected: ", socket.id);
     //    console.log(blockchain);
-        socket.join('data-room');
-
-        // socket.on('last', () => {
-        //     console.log(last)
-        //     console.log('this is that last var ---> \n', last);
-        //     socket.to('data-room').emit('data', JSON.stringify(last));
-        // })
-
-        socket.on('disconnect', (reason) => {
+        socket.join("data-room");
+        
+        socket.on("disconnect", (reason) => {
            console.log(reason);
-       })
+        })
+
+        socket.on("add-block", async () => {
+            idHolder++;
+            startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
+            io.to("data-room").emit("data", JSON.stringify(blockchain));
+        })
+      
     })
     
-    // io.on('last', (socket) => {
-    //     console.log(last)
-    //     console.log('this is that last var ---> \n', last);
-    //     socket.to('data-room').emit('data', JSON.stringify(last));
-    // })
+    
    
     setTimeout(() => {
-        io.to('data-room').emit('data', JSON.stringify(blockchain));
+        io.to("data-room").emit("data", JSON.stringify(blockchain));
     }, 3000);
    
    server.listen(http_port, (err) => {
@@ -283,7 +281,7 @@ let initHttpServer = (server) => {
         console.log(err);
     }
 
-    console.log('skynet running on port: ', http_port);
+    console.log("skynet running on port: ", http_port);
    })
 
 //    clearInterval(runOnce);
