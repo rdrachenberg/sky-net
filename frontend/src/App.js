@@ -1,4 +1,4 @@
-import  { Component, useState, useEffect, useCallback, Fragment } from 'react';
+import  { Component, useState, useEffect, useCallback, Fragment, useRef } from 'react';
 import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol, MDBRow, MDBIcon } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
 import { emit } from 'process';
@@ -8,24 +8,30 @@ const defaultMessage = 'Here is some default text blase blase'
 
 
 const App = () => {
-
+  const socket = useRef();
   const [data, setData] = useState([]);
   const [working, setWorking] = useState(false);
-  const [messages, setMessages] = useState(['this is here'])
-  const [latest, setLatest] = useState([])
+
+  const [messages, setMessages] = useState(['this is here']);
+  const [latest, setLatest] = useState([]);
+
+  const [transaction, setTransaction] = useState('');
   const [fullChain, setFullChain] = useState([])
   
-  var socket = io('http://localhost:3010', {transports: ['websocket']});
+  const inputTo = useRef();
+  const inputFrom = useRef();
+  const inputAmount = useRef();
+
+  // var socket = io('http://localhost:8000');
 
   const handleLastClick = () => {
-    socket.emit('last');
+   
     let lengthResult = data.length -1;
     let newData = [data[lengthResult]];
 
     console.log('our last button click was clicked');
     console.log(newData);
-    // console.log('second data here --->\n', newData);
-    //     setData([]);
+    
     setData(newData);
   
   }
@@ -40,52 +46,80 @@ const App = () => {
 
   const handleAddBlockClick = () => {
     console.log('That handle Add Block Click button was clicked')
-    socket.emit('add-block');
+    socket.current.emit('add-block');
     // socket.emit('data');
   }
-  useEffect(() => {
-    
-    // const socket = io('http://localhost:3010', {transports: ['websocket']});
 
-    socket.on('connection', () => {
+  const handleAddTransactionClick = (e) => {
+    e.preventDefault();
+    console.log('That handle Add Transaction Click button was clicked')
+    // console.log(e);
+    const from = inputFrom.current.value;
+    const to = inputTo.current.value;
+    const amount = inputAmount.current.value;
+    
+    setTransaction(from, to, amount);
+
+    console.log(from, to, amount); 
+
+    const transaction = { 
+                          from: from, 
+                          to: to, 
+                          amount: amount
+                        }
+
+    socket.current.emit('transaction', (transaction))
+    
+    // clean up inputs 
+    inputFrom.current.value = '';
+    inputTo.current.value = '';
+    inputAmount.current.value = '';
+    // socket.emit('data');
+  }
+
+  useEffect(() => {
+    socket.current = io('ws://localhost:8000');
+     // let socket = io('http://localhost:3010', {transports: ['websocket']});
+    // var socket = io('http://localhost:8000');
+
+    socket.current.on('connection', () => {
       console.log(socket.id);
     })
 
-    socket.on('data', (data) => {
+    socket.current.on('data', (data) => {
       setMessages('This is here')
       data = JSON.parse(data);
 
-      if(!working) {
-        setFullChain(data)
-      }
-
+      setFullChain(data)
       setWorking(true);
-      console.log(data);
-      
+
       setData(data);
-      
+      console.log(data);
+
+      if(data && data !== undefined){
+        data.current.addEventListener('DOMNodeInserted', event => {
+          const {currentTarget: target} = event;
+          // console.log(target)
+          target.scrollIntoView({top: target.scrollHeight, behavior: 'smooth'});
+        });
+      }
     })
 
-    socket.on('connect_error', () => {
+    socket.current.on('connect_error', () => {
       setTimeout(() => {
-        socket.connect()}, 10000)
+        socket.current.connect()}, 10000)
     })
 
-    socket.on('disconnect', () => {
-      setData('server disconnected!')
+    socket.current.on('disconnect', () => {
+      setMessages('server disconnected!')
       console.log('server is disconnected! *')
     })
 
-    // socket.on('add-block', () => {
-    //   socket.emit('add-block');
-    // })
-
     return () => {
-      socket.disconnect();
+      socket.current.disconnect();
     }
-    }, []
-  )
-  
+  },[])
+
   return (
     <div className='container'>
     <MDBContainer>
@@ -93,6 +127,7 @@ const App = () => {
 >
         <div className='text-center'>
         <h3 className='mb-3'>Cyberdyne Systems</h3>
+       
           <img
             className='mb-4'
             src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
@@ -116,10 +151,14 @@ const App = () => {
           <MDBTable striped className='table-responsive'>
             <MDBTableHead dark>
             <tr>
-              <th scope='col' maxwidth={'5px'}>Terminator#</th>
+              <th scope='col' style={{maxwidth: "10%"}}>Terminator#</th>
               <th scope='col'>Time</th>
               <th scope='col'>Hash</th>
               <th scope='col'>Previous Hash</th>
+              <th scope='col'>Sender</th>
+              <th scope='col'>Receiver</th>
+              <th scope='col'>Amount</th>
+
             </tr>
           </MDBTableHead>
           <tbody>
@@ -132,6 +171,9 @@ const App = () => {
                       <td>{timestamp}</td>
                       <td>{blockHash}</td>
                       <td>{prevHash}</td>
+                      <td>{sender}</td>
+                      <td>{receiver}</td>
+                      <td>{amount}</td>
                     </tr>
                   )
                 })}
@@ -158,19 +200,21 @@ const App = () => {
         <MDBCol>
           <form>
             <p className="h4 text-center mb-4">Submit transaction</p>
-            <label htmlFor="from" className="grey-text">
+            <label htmlFor="fromAddress" className="grey-text">
               From
             </label>
             <input
+              ref={inputFrom}
               type="text"
               id="from"
               className="form-control"
             />
             <br />
-            <label htmlFor="to" className="grey-text">
+            <label htmlFor="toAddress" className="grey-text">
               To
             </label>
             <input
+              ref={inputTo}
               type="text"
               id="to"
               className="form-control"
@@ -180,6 +224,7 @@ const App = () => {
               Amount
             </label>
             <input
+              ref={inputAmount}
               type="text"
               id="amount"
               className="form-control"
@@ -187,8 +232,8 @@ const App = () => {
             <br />
             
             <div className="text-center mt-4">
-              <MDBBtn color="success" type="submit">
-                Send
+              <MDBBtn color="success" type="submit" onClick={handleAddTransactionClick}>
+                Send 
                 <MDBIcon far icon="paper-plane" className="ml-2" />
               </MDBBtn>
             </div>
@@ -198,12 +243,7 @@ const App = () => {
       </MDBRow>
       </div>
         </div>
-
-        
       </div>
-      
-      
-        
     </MDBContainer>
     </div>
   );

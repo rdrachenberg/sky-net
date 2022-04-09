@@ -1,7 +1,8 @@
 const Transaction = require('./transactions');
 const bcrypt = require('bcrypt');
 const GENESIS_BLOCK = require('./genesis');
-const SHA256 = require('crypto-js/sha256');
+// const SHA256 = require('crypto-js/sha256');
+const crypto = require('crypto'), SHA256 = message => crypto.createHash('sha256').update(message).digest('hex');
 const CryptoJS = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -33,8 +34,8 @@ class Terminator {
     makeHash() {
         // console.log('this is the freaking Cyberdyne Hash ------> ', SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString());
         this.nonce = this.id; // set nonce equal to id. This will be used as a security check
-        return SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString(); // return hash using SHA256 imported library
-    }
+        return SHA256(this.id.toString() + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString(); // return hash using SHA256 imported library
+    }   
 
     transactionIsValid() {
         for(const data of this.data){
@@ -96,10 +97,11 @@ class CyberDyneChain {
         let firstHash = this.createHash('starting T1 Models');
         console.log(firstHash);
         // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
-        return new Terminator(1, Date.now(), JSON.stringify({data: {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}}), null);
+        return new Terminator(1, new Date(Date.now()), {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}, firstHash);
     }
     
     createHash(toHash) {
+
         return SHA256(toHash);
     }
 
@@ -131,13 +133,13 @@ class CyberDyneChain {
             throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
         }
 
-        this.pendingTransactions.push(transaction); // this is the mempool
+        this.pendingTransactions.push(transaction); //* this is the mempool
     }
 
     minePendingTransactions(miningRewardAddress) {
         const latestBlock = this.getLastBlock(this.getHeight());
         let i = startCyberdyneChain.this.nonce;
-        let date = Date.now();
+        let date = new Date(Date.now());
         let block = new Terminator(i, date, this.pendingTransactions, latestBlock.blockHash);
 
         block.mineBlock(this.difficulty);
@@ -187,8 +189,6 @@ class CyberDyneChain {
                 console.log('The previous hash does not match. Check yoself! ', JSON.stringify(currentBlock));
                 return false;
             }
-
-
         }
         return true;
     }
@@ -197,23 +197,35 @@ class CyberDyneChain {
 
 const startCyberDyneChain = new CyberDyneChain();
 
-setTimeout(() => { // here is where we set the first message delays and mint the first 100 blocks
+setInterval(() => {
+    let prevBlockTime = startCyberDyneChain.getLastBlock().timestamp;
+    let amounts = 1;
+    
+    while(prevBlockTime < (Date.now() + 10000)) {
+        break;
+    }
+
+    let i = startCyberDyneChain.getLastBlock().id + 1;
+    amounts += i;
+
+    let date = new Date(Date.now());
+    startCyberDyneChain.addBlock(new Terminator(i, date, {sender: null, receiver: null, amount: null}));
+    
+    i++;
+
+    console.log(prevBlockTime);
+    console.log('New Terminator Block made');
+}, 10000)
+
+setTimeout(() => { // here is where we set the first message delays and mint the first block
     let i = 2;
     let amounts = 1;
-
-    while(i <= 10) {
-        amounts += i;
-        let date = Date.now();
-        
-        startCyberDyneChain.addBlock(new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
-        i++
-    }
-    /* commenting out for development  */
+    
     setTimeout(() => {
-        console.log(startCyberDyneChain.getChain()); // returns full chain string 
+        console.log(startCyberDyneChain.getChain()); // returns full chain 
         // connectToPeers(startPeers) //need to uncomment 
         setTimeout(() => {
-            initHttpServer(server);
+            // initHttpServer(server);
             
             setTimeout(() => {
                 // initP2PServer(); 
@@ -230,9 +242,11 @@ setTimeout(() => { // here is where we set the first message delays and mint the
 
 // console.log(JSON.stringify(startCyberDyneChain, null, 15));
 
+
+
 // PORT Assignment local dev
 
-let http_port = process.env.HTTP_PORT || 3010;
+let http_port = process.env.HTTP_PORT || 8000;
 let ptp_port = process.env.HTTP_PORT || 6010;
 let addressOne = `http://localhost:${http_port}`;
 let addressTwo = `http://localhost:${ptp_port}`;
@@ -241,7 +255,7 @@ let startPeers = process.env.PEERS ? process.env.PEERS.split(',') : [];
 let blockchain = startCyberDyneChain.getChain();
 let last = startCyberDyneChain.getLastBlock();
 
-let idHolder = 10;
+let idHolder = last.id + 1;
 
 
 // let addOneBlock = startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
@@ -263,18 +277,25 @@ let initHttpServer = (server) => {
         })
 
         socket.on("add-block", async () => {
-            idHolder++;
-            startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
+            idHolder = startCyberDyneChain.getLastBlock().id + 1;
+            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
             io.to("data-room").emit("data", JSON.stringify(blockchain));
         })
-      
+
+        socket.on('transaction', (transaction) => {
+            const {from, to, amount} = transaction;
+            const numAmount = Number(amount);
+
+            idHolder = startCyberDyneChain.getLastBlock().id + 1;
+
+            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), {sender: from, receiver: to, amount: numAmount}));
+            io.to("data-room").emit("data", JSON.stringify(blockchain));
+        })
     })
     
-    
-   
-    setTimeout(() => {
+    setInterval(() => {
         io.to("data-room").emit("data", JSON.stringify(blockchain));
-    }, 3000);
+    }, 5000);
    
    server.listen(http_port, (err) => {
     if(err) {
@@ -283,11 +304,9 @@ let initHttpServer = (server) => {
 
     console.log("skynet running on port: ", http_port);
    })
-
-//    clearInterval(runOnce);
 }
 
-
+initHttpServer(server);
 
 module.exports = {CyberDyneChain};
 
@@ -333,7 +352,7 @@ module.exports = {CyberDyneChain};
     app.post('/mine-new-block', (req, res) => {
         let newBlock = req.body.data;
         let id = blockchain[blockchain.length -1].id + 1;
-        startCyberDyneChain.addBlock(new Terminator(id, Date.now(), newBlock))
+        startCyberDyneChain.addBlock(new Terminator(id, new Date(Date.now()), newBlock))
         
         console.log('block addded: ', JSON.stringify(startCyberDyneChain.getLastBlock()));
         res.send(JSON.stringify(newBlock));
