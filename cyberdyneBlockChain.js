@@ -1,61 +1,16 @@
+require('dotenv').config();
 const Transaction = require('./transactions');
-const bcrypt = require('bcrypt');
 const GENESIS_BLOCK = require('./genesis');
-// const SHA256 = require('crypto-js/sha256');
 const crypto = require('crypto'), SHA256 = message => crypto.createHash('sha256').update(message).digest('hex');
-const CryptoJS = require('crypto-js');
 const express = require('express');
 const bodyParser = require('body-parser');
-const WebSocket = require('ws');
 // const { createWallet } = require('./wallet');
 const {createWallet, validateWallet} = require('./wallet');
-const path = require('path');
-const cors = require('cors');
-// const Block = require('./block');
+const Terminator = require('./block');
 const http = require('http');
-const { parse } = require('url');
-const { WebSocketServer } = require('ws');
-const socketIo = require('socket.io')
+const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
-
-
-class Terminator {
-    constructor(id, timestamp, data, prevHash) {
-        this.id = id;
-        this.timestamp =timestamp;
-        this.blockHash = this.makeHash(); 
-        this.prevHash = prevHash;
-        this.data = data; 
-        this.nonce = id;
-        
-    }
-
-    makeHash() {
-        // console.log('this is the freaking Cyberdyne Hash ------> ', SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString());
-        this.nonce = this.id; // set nonce equal to id. This will be used as a security check
-        return SHA256(this.id.toString() + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString(); // return hash using SHA256 imported library
-    }   
-
-    transactionIsValid() {
-        for(const data of this.data){
-            if(!data.isValid()){
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    mineBlock(difficulty) {
-        while(this.blockHash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
-            this.nonce++;
-            this.blockHash = this.makeHash();
-        }
-
-        console.log('Skynet mined another Terminator: #', this.nonce + '\n' + this.blockHash); 
-    }
-}
 
 class CyberDyneChain {
     constructor() {
@@ -157,7 +112,7 @@ class CyberDyneChain {
 
         for(const terminator of this.skynet_chain) {
             for(const transaction of terminator.data){
-                
+
                 if(terminator.addressFrom === address){
                     balance -= amount;
                 }
@@ -268,7 +223,7 @@ let initHttpServer = (server) => {
     })
 
     io.on("connection", socket => {
-        console.log("client connected: ", socket.id);
+        // console.log("client connected: ", socket.id);
     //    console.log(blockchain);
         socket.join("data-room");
         

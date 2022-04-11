@@ -198,7 +198,7 @@ const App = () => {
         <MDBRow>
         <MDBCol></MDBCol>
         <MDBCol>
-          <form>
+          <form className='submit-card glowing'>
             <p className="h4 text-center mb-4">Submit transaction</p>
             <label htmlFor="fromAddress" className="grey-text">
               From

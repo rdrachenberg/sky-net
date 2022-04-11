@@ -1,4 +1,4 @@
-const SHA256 = require('crypto-js/sha256');
+const crypto = require('crypto'), SHA256 = message => crypto.createHash('sha256').update(message).digest('hex');
 const Elliptic = require( 'elliptic');
 
 const ec = new Elliptic.ec('secp256k1');
