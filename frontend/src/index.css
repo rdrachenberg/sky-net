@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 10px;
   font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -13,6 +13,7 @@ code {
 .container {
   display: flex;
   margin: 5%;
+  margin-top: 12%;
   padding: 5%;
   align-items: center;
 }
@@ -34,14 +35,13 @@ code {
   position: absolute;
   left: -2px;
   top: -2px;
-  background: linear-gradient(45deg, #e8f74d, #ff6600d9, #00ff66, #13ff13, #ad27ad, #bd2681, #6512b9, #ff3300de, #5aabde);
+  background: linear-gradient(45deg, #6DD5FA, #ff6600d9, #00ff66, #13ff13, #ad27ad, #bd2681, #6512b9, #ff3300de, #5aabde);
   background-size: 400%;
   width: calc(100% + 5px);
   height: calc(100% + 5px);
   z-index: -1;
   border-radius: 10px;
-  animation: glower 20s linear infinite;
-  
+  animation: glower 25s linear infinite;
 }
 
 @keyframes glower {

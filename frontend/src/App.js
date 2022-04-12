@@ -82,8 +82,8 @@ const App = () => {
      // let socket = io('http://localhost:3010', {transports: ['websocket']});
     // var socket = io('http://localhost:8000');
 
-    socket.current.on('connection', () => {
-      console.log(socket.id);
+    socket.current.on('connect', () => {
+      console.log(socket.current.id);
     })
 
     socket.current.on('data', (data) => {
