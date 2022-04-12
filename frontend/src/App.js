@@ -1,5 +1,5 @@
 import  { Component, useState, useEffect, useCallback, Fragment, useRef } from 'react';
-import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol, MDBRow, MDBIcon } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol, MDBRow, MDBIcon, MDBCard, MDBCardBody, MDBCardText, MDBCardImage } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
 import { emit } from 'process';
 
@@ -17,6 +17,8 @@ const App = () => {
 
   const [transaction, setTransaction] = useState('');
   const [fullChain, setFullChain] = useState([])
+
+  const [keyPair, setKeyPair] = useState([]);
   
   const inputTo = useRef();
   const inputFrom = useRef();
@@ -77,6 +79,12 @@ const App = () => {
     // socket.emit('data');
   }
 
+  const handleKeyGeneration = (e) => {
+    e.preventDefault();
+    socket.current.emit('keygen');
+    // setKeyPair(keygen);
+  }
+
   useEffect(() => {
     socket.current = io('ws://localhost:8000');
      // let socket = io('http://localhost:3010', {transports: ['websocket']});
@@ -103,6 +111,11 @@ const App = () => {
           target.scrollIntoView({top: target.scrollHeight, behavior: 'smooth'});
         });
       }
+    })
+
+    socket.current.on('keygeneration', (keygen) => {
+      setKeyPair(keygen);
+      console.log('Keygen hit')
     })
 
     socket.current.on('connect_error', () => {
@@ -179,8 +192,7 @@ const App = () => {
                 })}
         </tbody>
         </MDBTable>
-        </div>
-        
+        </div> 
         <div id='button-div' className='d-flex align-items-start mb-3'>
           <MDBCol>
             <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
@@ -191,12 +203,33 @@ const App = () => {
           <MDBCol>
             <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
           </MDBCol>
+          <MDBCol>
+            <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
+          </MDBCol>
           
         </div>
         <MDBRow></MDBRow>
         <div>
         <MDBRow>
-        <MDBCol></MDBCol>
+        <MDBCol>
+           {keyPair.map((pairs) => {
+             const {keys} = pairs;
+             const {privateKey, publicKey} = keys;
+             return (
+              <MDBCard key ={privateKey} style={{ width: '18rem' }}>
+                <MDBCardImage src='https://cdn.pixabay.com/photo/2017/03/03/13/56/key-2114046_960_720.jpg' alt='...' position='top' />
+                <MDBCardBody>
+                  <MDBCardText id='private-key'>
+                  Private Key: {privateKey}
+                  </MDBCardText>
+                  <MDBCardText id='public-key'>
+                  Public Key: {publicKey}
+                  </MDBCardText>
+                </MDBCardBody>
+              </MDBCard> 
+             )
+           })}     
+        </MDBCol>
         <MDBCol>
           <form className='submit-card glowing'>
             <p className="h4 text-center mb-4">Submit transaction</p>
@@ -247,7 +280,6 @@ const App = () => {
     </MDBContainer>
     </div>
   );
-  
 }
   
 export default App;

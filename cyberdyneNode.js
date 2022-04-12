@@ -13,6 +13,7 @@ const socketIo = require('socket.io');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const {generateKeys} = require('./keygen.js');
 
 const startCyberDyneChain = new CyberDyneChain();
 
@@ -123,6 +124,11 @@ let initHttpServer = (server) => {
 
             startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), {sender: from, receiver: to, amount: numAmount}));
             io.to("data-room").emit("data", JSON.stringify(blockchain));
+        })
+
+        socket.on('keygen', () => {
+            let keys = generateKeys();
+            socket.emit('keygeneration', keys);
         })
     })
     

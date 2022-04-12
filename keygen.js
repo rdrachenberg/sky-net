@@ -1,30 +1,31 @@
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 
-let keyGenerator = [];
+const keyGenerator = [];
 
-let generateKeys = () => {
-    for(let i =0; i < 1; i++) {
-        const key = ec.genKeyPair();
-        const publicKey = key.getPublic('hex');
-        const privateKey = key.getPrivate('hex');
+const generateKeys = () => {
     
-        keyGenerator.push({
-            keys:{
-                    privateKey: privateKey,
-                    publicKey: publicKey
-                }
-        });
-    }
+    const key = ec.genKeyPair();
+    const publicKey = key.getPublic('hex');
+    const privateKey = key.getPrivate('hex');
+
+    keyGenerator.push({
+        keys:{
+                privateKey: privateKey,
+                publicKey: publicKey
+            }
+    });
     
-    // console.log(...[...keyGenerator]);
+    console.log(...[...keyGenerator]);
     return keyGenerator
 }
+
+// console.log('Private Key: ', privateKey);
+// console.log('Public Key: ', publicKey);
 
 
 module.exports = { generateKeys };
 
-// console.log('Private Key: ', privateKey);
-// console.log('Public Key: ', publicKey);
+
 
 
