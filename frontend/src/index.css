@@ -58,6 +58,10 @@ code {
   }
 }
 
+#private-key {
+  font-weight: bolder;
+}
+
 #table-container {
   width:  80%;
   margin-left: auto;

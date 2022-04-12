@@ -114,6 +114,7 @@ const App = () => {
     })
 
     socket.current.on('keygeneration', (keygen) => {
+      
       setKeyPair(keygen);
       console.log('Keygen hit')
     })
