@@ -102,8 +102,8 @@ let initHttpServer = (server) => {
     })
 
     io.on("connection", socket => {
-        console.log("client connected: ", socket.id);
-    //    console.log(blockchain);
+        // console.log("client connected: ", socket.id);
+        // console.log(blockchain);
         socket.join("data-room");
         
         socket.on("disconnect", (reason) => {
@@ -111,8 +111,11 @@ let initHttpServer = (server) => {
         })
 
         socket.on("add-block", async () => {
+            let from = null;
+            let to = null;
+            let value = null;
             idHolder = startCyberDyneChain.getLastBlock().id + 1;
-            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
+            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, 5, 'manual block added')));
             io.to("data-room").emit("data", JSON.stringify(blockchain));
         })
 
@@ -122,7 +125,7 @@ let initHttpServer = (server) => {
 
             idHolder = startCyberDyneChain.getLastBlock().id + 1;
 
-            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), {sender: from, receiver: to, amount: numAmount}));
+            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, numAmount, 5, 'manual transaction triggered')));
             io.to("data-room").emit("data", JSON.stringify(blockchain));
         })
 

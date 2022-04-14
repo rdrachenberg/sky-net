@@ -12,6 +12,13 @@ const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 
+const Elliptic = require( 'elliptic');
+const ec = new Elliptic.ec('secp256k1');
+
+const MINT_PRIVATE_KEY = process.env.MINT_PRIVATE_ADDRESS
+const MINT_PUBLIC_ADDRESS = process.env.MINT_PUBLIC_ADDRESS;
+const MINT_KEY_PAIR = ec.keyFromPrivate( MINT_PRIVATE_KEY,'hex');
+
 class CyberDyneChain {
     constructor() {
         this.skynet_chain = [this.mineGenesisBlock()];
@@ -52,11 +59,11 @@ class CyberDyneChain {
         let firstHash = this.createHash('starting T1 Models');
         console.log(firstHash);
         // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
-        return new Terminator(1, new Date(Date.now()), {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}, firstHash);
+        // {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}
+        return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', '045b043a71bd6c0136f5e3c3687269d6b681ed285bc8a7a17377808bfaee4b8e2a05c5e3c6527977c13c955239a092edd1521b689957f08216f75be840d98fa0a2', 10000000, 5, 'Genisis transaction', '0000000000000000000000000000000000000000000000000000000000000000'), firstHash);
     }
     
     createHash(toHash) {
-
         return SHA256(toHash);
     }
 

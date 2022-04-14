@@ -178,16 +178,16 @@ const App = () => {
           <tbody>
                 {data.map((item) => {
                   const { id, timestamp, nonce, blockHash, prevHash, data} = item;
-                  const {sender, receiver, amount} = data;
+                  const {from, to, value} = data;
                   return (
                     <tr key = {id} >
                       <td>{id}</td>
                       <td>{timestamp}</td>
                       <td>{blockHash}</td>
                       <td>{prevHash}</td>
-                      <td>{sender}</td>
-                      <td>{receiver}</td>
-                      <td>{amount}</td>
+                      <td>{from}</td>
+                      <td>{to}</td>
+                      <td>{value}</td>
                     </tr>
                   )
                 })}
