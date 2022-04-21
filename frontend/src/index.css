@@ -5,9 +5,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.balance-card {
+  position: relative;
+  height: auto;
+  width: auto;
+  display: block;
+  background: linear-gradient(0deg, black, #444444);
+  border-radius: 10px;
+  color: white;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.account-balance {
+  color: gold;
+  font-size: large;
 }
 
 .container {

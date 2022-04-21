@@ -2,6 +2,7 @@ import  { Component, useState, useEffect, useCallback, Fragment, useRef } from '
 import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol, MDBRow, MDBIcon, MDBCard, MDBCardBody, MDBCardText, MDBCardImage } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
 import { emit } from 'process';
+import ModalPage from './blockchainModal';
 
 
 const defaultMessage = 'Here is some default text blase blase'
@@ -19,10 +20,17 @@ const App = () => {
   const [fullChain, setFullChain] = useState([])
 
   const [keyPair, setKeyPair] = useState([]);
+  const [balance, setBalance] =useState([])
+
+  const [toggle, setToggle] = useState(false);
   
   const inputTo = useRef();
   const inputFrom = useRef();
   const inputAmount = useRef();
+
+  const inputAccount = useRef();
+  const inputPrivateKey = useRef();
+  const keyPublic = useRef();
 
   // var socket = io('http://localhost:8000');
 
@@ -57,6 +65,7 @@ const App = () => {
     console.log('That handle Add Transaction Click button was clicked')
     // console.log(e);
     const from = inputFrom.current.value;
+    const privKey = inputPrivateKey.current.value;
     const to = inputTo.current.value;
     const amount = inputAmount.current.value;
     
@@ -67,7 +76,8 @@ const App = () => {
     const transaction = { 
                           from: from, 
                           to: to, 
-                          amount: amount
+                          amount: amount,
+                          privateKey: privKey
                         }
 
     socket.current.emit('transaction', (transaction))
@@ -76,6 +86,7 @@ const App = () => {
     inputFrom.current.value = '';
     inputTo.current.value = '';
     inputAmount.current.value = '';
+    inputPrivateKey.current.value = '';
     // socket.emit('data');
   }
 
@@ -83,6 +94,27 @@ const App = () => {
     e.preventDefault();
     socket.current.emit('keygen');
     // setKeyPair(keygen);
+  }
+
+  const handleCheckBalanceClick = (e) => {
+    e.preventDefault();
+    const address = inputAccount.current.value;
+    socket.current.emit('balance', address);
+  }
+
+  const handleCopyPublicKey = (e) => {
+    e.preventDefault();
+    
+    console.log(e)
+    let pub = keyPair[0].keys.publicKey;
+
+    console.log(pub)
+    navigator.clipboard.writeText(pub);
+  }
+
+  const handleModal = (e) => {
+    e.preventDefault();
+    setToggle(true);
   }
 
   useEffect(() => {
@@ -109,6 +141,7 @@ const App = () => {
           const {currentTarget: target} = event;
           // console.log(target)
           target.scrollIntoView({top: target.scrollHeight, behavior: 'smooth'});
+          
         });
       }
     })
@@ -117,6 +150,11 @@ const App = () => {
       
       setKeyPair(keygen);
       console.log('Keygen hit')
+    })
+
+    socket.current.on('sendbalance', (balance) => {
+      setBalance(balance)
+      console.log('here is the balance ---> ',balance)
     })
 
     socket.current.on('connect_error', () => {
@@ -181,7 +219,7 @@ const App = () => {
                   const {from, to, value} = data;
                   return (
                     <tr key = {id} >
-                      <td>{id}</td>
+                      <td onClick={handleModal}>{id}</td>
                       <td>{timestamp}</td>
                       <td>{blockHash}</td>
                       <td>{prevHash}</td>
@@ -213,6 +251,7 @@ const App = () => {
         <div>
         <MDBRow>
         <MDBCol>
+        
            {keyPair.map((pairs) => {
              const {keys} = pairs;
              const {privateKey, publicKey} = keys;
@@ -223,7 +262,7 @@ const App = () => {
                   <MDBCardText id='private-key'>
                   Private Key: {privateKey}
                   </MDBCardText>
-                  <MDBCardText id='public-key'>
+                  <MDBCardText id='public-key' onClick={handleCopyPublicKey}>
                   Public Key: {publicKey}
                   </MDBCardText>
                 </MDBCardBody>
@@ -241,6 +280,16 @@ const App = () => {
               ref={inputFrom}
               type="text"
               id="from"
+              className="form-control"
+            />
+            <br />
+            <label htmlFor="privateKey" className="grey-text">
+              Private Key
+            </label>
+            <input
+              ref={inputPrivateKey}
+              type="text"
+              id="private"
               className="form-control"
             />
             <br />
@@ -273,7 +322,35 @@ const App = () => {
             </div>
           </form>
         </MDBCol>
-        <MDBCol></MDBCol>
+        <MDBCol>
+        <form className='balance-card'>
+            <p className="h4 text-center mb-4">Get balance</p>
+            
+            <label htmlFor="address" className="grey-text">
+              Address
+            </label>
+            <input
+              ref={inputAccount}
+              type="text"
+              id="address"
+              className="form-control"
+            />
+            <br />
+            <div className='account-balance'>
+              <MDBCardText>
+                Account Balance: {balance}
+              </MDBCardText>
+            </div>
+            <div className="text-center mt-4">
+              <MDBBtn color="danger" type="submit" onClick={handleCheckBalanceClick}>
+                Check Balance 
+                <MDBIcon far icon="paper-plane" className="ml-2" />
+              </MDBBtn>
+            </div>
+            
+          </form>
+              
+        </MDBCol>
       </MDBRow>
       </div>
         </div>

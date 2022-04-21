@@ -50,16 +50,16 @@ setInterval(() => {
         break;
     }
 
-    let i = startCyberDyneChain.getLastBlock().id + 1;
-    amounts += i;
+    // let i = startCyberDyneChain.getLastBlock().id + 1;
+    // amounts += i;
 
-    let date = new Date(Date.now());
-    startCyberDyneChain.addBlock(new Terminator(i, date, {sender: null, receiver: null, amount: null}));
+    // let date = new Date(Date.now());
+    // startCyberDyneChain.addBlock(new Terminator(i, date, {sender: null, receiver: null, amount: null}));
     
-    i++;
+    // i++;
 
-    console.log(prevBlockTime);
-    console.log('New Terminator Block made');
+    // console.log(prevBlockTime);
+    console.log('Terminator patrol\n\n', prevBlockTime + '\n');
 }, 10000)
 
 setTimeout(() => { // here is where we set the first message delays and mint the first block
@@ -120,18 +120,33 @@ let initHttpServer = (server) => {
         })
 
         socket.on('transaction', (transaction) => {
-            const {from, to, amount} = transaction;
+            const {from, to, amount, data} = transaction;
             const numAmount = Number(amount);
 
             idHolder = startCyberDyneChain.getLastBlock().id + 1;
-
-            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, numAmount, 5, 'manual transaction triggered')));
-            io.to("data-room").emit("data", JSON.stringify(blockchain));
+            
+            
+            
+            if(startCyberDyneChain.addTransaction(transaction)){
+                // startCyberDyneChain.addTransaction(transaction)
+                
+                io.to("data-room").emit("data", JSON.stringify(blockchain));
+            }else {
+                console.log('transaction error detected')
+                new Errror('This is error in the node')
+            }
+            
         })
 
         socket.on('keygen', () => {
             let keys = generateKeys();
             socket.emit('keygeneration', keys);
+        })
+
+        socket.on('balance', (address) => {
+            let balance = startCyberDyneChain.getBalanceOfAddress(address);
+
+            socket.emit('sendbalance', balance);
         })
     })
     

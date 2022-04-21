@@ -60,7 +60,7 @@ class CyberDyneChain {
         console.log(firstHash);
         // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
         // {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}
-        return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', '045b043a71bd6c0136f5e3c3687269d6b681ed285bc8a7a17377808bfaee4b8e2a05c5e3c6527977c13c955239a092edd1521b689957f08216f75be840d98fa0a2', 10000000, 5, 'Genisis transaction', '0000000000000000000000000000000000000000000000000000000000000000'), firstHash);
+        return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', '0485ff3ed5243842afac52a76a3f8e56e993b9ff155667e9a1a0dc33967d6384096186f42fe24143316ea84634e22093c9f559675bab264c25a38dab742ef972fa', 10000000, 0, 'Genisis transaction'), firstHash);
     }
     
     createHash(toHash) {
@@ -87,15 +87,33 @@ class CyberDyneChain {
     }
 
     addTransaction(transaction) {
-        if(!transaction.fromAddress || !transaction.toAddress) {
+        const {from, to, amount, privateKey} = transaction;
+            const numAmount = new Number(amount);
+
+            console.log('Data addTransaction',privateKey);
+
+        if(!transaction.from || !transaction.to) {
+            // transaction = false
             throw new Error('The transaction must include a To and From address(s). Please properly format your data!')
         }
 
-        if(!transaction.isValid()) {
-            throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
-        }
+        // if(!transaction.isValid()) {
+        //     throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
+        // }
+        const transactionsSanatized = {from: from, to: to, amount: Number(amount)};
+        this.pendingTransactions.push(transactionsSanatized); //* this is the mempool
+        console.log(' This is the pending Transactions array', this.pendingTransactions); 
+        
+        
+        let idHolder = this.getLastBlock().id + 1;
 
-        this.pendingTransactions.push(transaction); //* this is the mempool
+        console.log('PKEY HERE --->>', privateKey);
+        
+        this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, numAmount, 0, privateKey)));
+
+        this.getBalanceOfAddress(to);
+        return true 
+          
     }
 
     minePendingTransactions(miningRewardAddress) {
@@ -118,18 +136,37 @@ class CyberDyneChain {
         let balance = 0;
 
         for(const terminator of this.skynet_chain) {
-            for(const transaction of terminator.data){
+            // console.log(terminator)
+            // for(const transaction in terminator.data){
+            console.log(terminator.data.from);
 
-                if(terminator.addressFrom === address){
-                    balance -= amount;
+
+
+                if(terminator.data.from === address) {
+                    console.log('from address found\n value: ',terminator.data.value)
+                    
+                    balance -= terminator.data.value;
+                    // return balance 
                 }
 
-                if(transaction.addressTo === address) {
-                    balance += amount;
+                if(terminator.data.to === address) {
+                    console.log('to address found\n value: ', terminator.data.value)
+
+                    balance += terminator.data.value;
+                    // return balance 
                 }
-            }
+                // if(terminator.data.from === address){
+                //     balance -= terminator.data.value;
+                //     console.log('from hit');
+                // }
+
+                // if(terminator.data.to === address) {
+                //     balance += terminator.data.value;
+                //     console.log('to hit');
+                // }
+            // }
         }
-
+        console.log('Here is your freaking balance sir :-)',balance)
         return balance
     }
 
