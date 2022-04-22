@@ -168,7 +168,7 @@ const App = () => {
     })
 
     return () => {
-      socket.current.disconnect();
+      socket.current.disconnect(false);
     }
   },[])
 

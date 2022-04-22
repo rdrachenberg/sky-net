@@ -57,7 +57,7 @@ class CyberDyneChain {
     mineGenesisBlock() {
         this.initMessages();
         let firstHash = this.createHash('starting T1 Models');
-        console.log(firstHash);
+        // console.log(firstHash);
         // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
         // {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}
         return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', '0485ff3ed5243842afac52a76a3f8e56e993b9ff155667e9a1a0dc33967d6384096186f42fe24143316ea84634e22093c9f559675bab264c25a38dab742ef972fa', 10000000, 0, 'Genisis transaction'), firstHash);
@@ -92,44 +92,69 @@ class CyberDyneChain {
 
             console.log('Data addTransaction',privateKey);
 
-        if(!transaction.from || !transaction.to) {
+        if(!transaction.from || !transaction.to || !transaction.amount) {
             // transaction = false
-            throw new Error('The transaction must include a To and From address(s). Please properly format your data!')
+            throw new Error('The transaction must include a To, From address(s), and Amount. Please properly format your data!')
         }
+
+        const keyPair = ec.keyFromPrivate(transaction.privateKey, 'hex');
+        
+        const publicKey = keyPair.getPublic('hex');
+        // console.log(publicKey);
+
+        if(publicKey !== from) {
+            console.log('here is the publicKey var ==> ',publicKey);
+            throw new Error('your private and public keys dont match up. Check yourself ')
+        }
+        // if(transaction.privateKey !== ) {
+
+        // }
 
         // if(!transaction.isValid()) {
         //     throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
         // }
         const transactionsSanatized = {from: from, to: to, amount: Number(amount)};
         this.pendingTransactions.push(transactionsSanatized); //* this is the mempool
-        console.log(' This is the pending Transactions array', this.pendingTransactions); 
+        // console.log(' This is the pending Transactions array', this.pendingTransactions); 
         
         
-        let idHolder = this.getLastBlock().id + 1;
+        // let idHolder = this.getLastBlock().id + 1;
 
-        console.log('PKEY HERE --->>', privateKey);
+        // console.log('PKEY HERE --->>', privateKey);
         
-        this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, numAmount, 0, privateKey)));
+        // this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, numAmount, 0, new Date(Date.now()),privateKey)));
 
-        this.getBalanceOfAddress(to);
-        return true 
+        // this.getBalanceOfAddress(to);
+        // return true 
+        this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')
           
     }
 
     minePendingTransactions(miningRewardAddress) {
-        const latestBlock = this.getLastBlock(this.getHeight());
-        let i = startCyberdyneChain.this.nonce;
-        let date = new Date(Date.now());
-        let block = new Terminator(i, date, this.pendingTransactions, latestBlock.blockHash);
+        // const latestBlock = this.getLastBlock(this.getHeight());
 
-        block.mineBlock(this.difficulty);
+        // let i = startCyberdyneChain.this.nonce;
+
+        let idHolder = this.getLastBlock().id + 1;
+
+        // console.log('PKEY HERE --->>', privateKey);
+
+        for(let i =0; i < this.pendingTransactions.length; i++) {
+
+            this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, 0, new Date(Date.now()))));
+        }
+        
+        
+
+        // this.getBalanceOfAddress(to);
+        // block.mineBlock(this.difficulty);
 
         console.log('New Terminator mined! Skynet is growing!');
-        this.skynet_chain.push(block);
+        // this.skynet_chain.push(block);
 
-        this.pendingTransactions = [
-            new Transaction(null, miningRewardAddress, this.miningReward)
-        ];
+        // this.pendingTransactions = [
+        //     new Transaction(null, miningRewardAddress, this.miningReward)
+        // ];
     }
 
     getBalanceOfAddress(address) {

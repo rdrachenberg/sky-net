@@ -50,15 +50,6 @@ setInterval(() => {
         break;
     }
 
-    // let i = startCyberDyneChain.getLastBlock().id + 1;
-    // amounts += i;
-
-    // let date = new Date(Date.now());
-    // startCyberDyneChain.addBlock(new Terminator(i, date, {sender: null, receiver: null, amount: null}));
-    
-    // i++;
-
-    // console.log(prevBlockTime);
     console.log('Terminator patrol\n\n', prevBlockTime + '\n');
 }, 10000)
 
@@ -98,7 +89,8 @@ let initHttpServer = (server) => {
    const io = socketIo(server, {
        cors: {
            origin: 'http://localhost:3000'
-       }
+       },
+       pingTimeout: 180000, pingInterval: 25000
     })
 
     io.on("connection", socket => {
@@ -127,8 +119,8 @@ let initHttpServer = (server) => {
             
             
             
-            if(startCyberDyneChain.addTransaction(transaction)){
-                // startCyberDyneChain.addTransaction(transaction)
+            if(from != '' && to != '' && numAmount != NaN && data != 'Genisis transaction' ){
+                startCyberDyneChain.addTransaction(transaction)
                 
                 io.to("data-room").emit("data", JSON.stringify(blockchain));
             }else {
