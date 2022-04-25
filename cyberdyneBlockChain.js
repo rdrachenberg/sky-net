@@ -19,6 +19,8 @@ const MINT_PRIVATE_KEY = process.env.MINT_PRIVATE_ADDRESS
 const MINT_PUBLIC_ADDRESS = process.env.MINT_PUBLIC_ADDRESS;
 const MINT_KEY_PAIR = ec.keyFromPrivate( MINT_PRIVATE_KEY,'hex');
 
+let keyPair;
+
 class CyberDyneChain {
     constructor() {
         this.skynet_chain = [this.mineGenesisBlock()];
@@ -97,7 +99,7 @@ class CyberDyneChain {
             throw new Error('The transaction must include a To, From address(s), and Amount. Please properly format your data!')
         }
 
-        const keyPair = ec.keyFromPrivate(transaction.privateKey, 'hex');
+        keyPair = ec.keyFromPrivate(privateKey, 'hex');
         
         const publicKey = keyPair.getPublic('hex');
         // console.log(publicKey);
@@ -113,9 +115,9 @@ class CyberDyneChain {
         // if(!transaction.isValid()) {
         //     throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
         // }
-        const transactionsSanatized = {from: from, to: to, amount: Number(amount)};
+        const transactionsSanatized = {from: from, to: to, amount: Number(amount), keyPair: keyPair};
         this.pendingTransactions.push(transactionsSanatized); //* this is the mempool
-        // console.log(' This is the pending Transactions array', this.pendingTransactions); 
+        console.log(' This is the pending Transactions array', this.pendingTransactions); 
         
         
         // let idHolder = this.getLastBlock().id + 1;
@@ -141,8 +143,12 @@ class CyberDyneChain {
 
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
-            this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, 0, new Date(Date.now()))));
+            this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, 0, new Date(Date.now()), this.pendingTransactions[i].keyPair)));
+            
+            idHolder++;
         }
+
+        this.pendingTransactions = [];
         
         
 

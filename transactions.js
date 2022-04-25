@@ -31,15 +31,25 @@ class Transaction { // define and export class with a constructor
             return this.signature;
         } else {
             console.log('IS THIS DATA EVER BEING HIT? -->  ',this.data)
-            let sig = this.signTransaction(this.data)
-            return sig;
+            
+            let sig = this.signTransaction(this.data);
+            let validateSignature = this.isValid();
+            console.log('Valid signature? ', validateSignature)
+            if(validateSignature){
+                this.signature = sig;
+                return sig;
+            } else {
+                throw new Error('Your signature is not valid in this transaction')
+            }
+
+            
         }
     }
 
     signTransaction(signingKey) { // define a class function to sign the transaction. Will take as a parameter a signingKey
         // signingKey = ec.keyFromPrivate(this.from, 'hex');
-        console.log('here is the signing key -->\n ', signingKey)
-        console.log('Here is the this.data --->>>> \n')
+        // console.log('here is the signing key -->\n ', signingKey)
+        // console.log('Here is the this.data --->>>> \n')
             
             let passedInPKey = ec.keyFromPrivate(signingKey, 'hex')
             // signingKey = passedInPKey = 
@@ -69,6 +79,7 @@ class Transaction { // define and export class with a constructor
         if(this.from === null){
             return true;
         }
+        const signingKey = this.data;
 
         if(signingKey.getPublic('hex') !== this.from) {
             throw new Error('You must own the wallet to sign for it!'); // Throw error and pass message 
@@ -78,7 +89,7 @@ class Transaction { // define and export class with a constructor
 
         console.log('Here is the signature: ', this.signature);
 
-        return publicKey.verify(this.makeHash(), this.signature);
+        return publicKey.verify(this.hash, this.signature);
     }
 }
 
