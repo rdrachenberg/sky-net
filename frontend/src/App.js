@@ -91,7 +91,7 @@ const App = () => {
   }
 
   const handleKeyGeneration = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     socket.current.emit('keygen');
     // setKeyPair(keygen);
   }
@@ -147,9 +147,19 @@ const App = () => {
     })
 
     socket.current.on('keygeneration', (keygen) => {
-      
+      console.log( 'this is whats comming back as keyPair on click ---> ', keyPair);
+      if(keyPair) {
+        // console.log('IS THIS FREKING EVER HIT?');
+        let temp = [];
+
+        setKeyPair(temp);
+        setKeyPair(keygen);
+
+        console.log('Keygen hit 2nd time!!')
+      }
       setKeyPair(keygen);
       console.log('Keygen hit')
+      
     })
 
     socket.current.on('sendbalance', (balance) => {
@@ -183,7 +193,7 @@ const App = () => {
           <img
             className='mb-4'
             src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
-            style={{ width: 250, height: 400 }}
+            style={{ flex: 1, width: 250, height: 400, resizeMode: 'contain' }}
           />
           
           <p className='mb-3'>Welcome to the Revolution</p>
@@ -250,8 +260,7 @@ const App = () => {
         <MDBRow></MDBRow>
         <div>
         <MDBRow>
-        <MDBCol>
-        
+        <MDBCol>       
            {keyPair.map((pairs) => {
              const {keys} = pairs;
              const {privateKey, publicKey} = keys;

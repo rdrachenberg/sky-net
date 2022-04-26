@@ -30,11 +30,12 @@ class Transaction { // define and export class with a constructor
             // this.senderSignature.push(this.signature);
             return this.signature;
         } else {
-            console.log('IS THIS DATA EVER BEING HIT? -->  ',this.data)
-            
+            // console.log('IS THIS DATA EVER BEING HIT? -->  ',this.data)   
             let sig = this.signTransaction(this.data);
             let validateSignature = this.isValid();
-            console.log('Valid signature? ', validateSignature)
+
+            console.log('Valid signature? ', validateSignature);
+
             if(validateSignature){
                 this.signature = sig;
                 return sig;
@@ -47,12 +48,11 @@ class Transaction { // define and export class with a constructor
     }
 
     signTransaction(signingKey) { // define a class function to sign the transaction. Will take as a parameter a signingKey
-        // signingKey = ec.keyFromPrivate(this.from, 'hex');
+        
         // console.log('here is the signing key -->\n ', signingKey)
         // console.log('Here is the this.data --->>>> \n')
             
-            let passedInPKey = ec.keyFromPrivate(signingKey, 'hex')
-            // signingKey = passedInPKey = 
+            let passedInPKey = ec.keyFromPrivate(signingKey, 'hex');
 
             if(passedInPKey.getPublic('hex') !== this.from && this.data != 'Genisis transaction') { // if the public signing key is NOT the same as the senders address
                 throw new Error('You must own the wallet to sign for it!'); // Throw error and pass message 
@@ -61,13 +61,12 @@ class Transaction { // define and export class with a constructor
     
             this.hash = this.makeHash(); // make this.hash eqaul to function makeHash
 
-            const sign = passedInPKey.sign(this.hash, 'base64'); // create var sign equal to the passed in signing key 
+            const sign = passedInPKey.sign(this.hash, 'base64'); // create var sign equal to the cryptographic signature of this.hash base64 encoding
 
             this.signature = sign.toDER('hex');
 
             console.log('Signature: ', this.signature);
-            // this.senderSignature = []
-            // this.senderSignature.push(this.signature)
+
             return this.signature
         // }
         

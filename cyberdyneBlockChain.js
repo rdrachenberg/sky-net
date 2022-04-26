@@ -26,7 +26,7 @@ class CyberDyneChain {
         this.skynet_chain = [this.mineGenesisBlock()];
         this.difficulty = 3;
         this.pendingTransactions = [];
-        this.miningReward = 1000;
+        this.miningReward = 22;
     }
     initMessages() {
         setTimeout(() => {
@@ -90,44 +90,34 @@ class CyberDyneChain {
 
     addTransaction(transaction) {
         const {from, to, amount, privateKey} = transaction;
-            const numAmount = new Number(amount);
-
-            console.log('Data addTransaction',privateKey);
+            // console.log('Data addTransaction',privateKey);
 
         if(!transaction.from || !transaction.to || !transaction.amount) {
-            // transaction = false
             throw new Error('The transaction must include a To, From address(s), and Amount. Please properly format your data!')
         }
 
         keyPair = ec.keyFromPrivate(privateKey, 'hex');
         
         const publicKey = keyPair.getPublic('hex');
-        // console.log(publicKey);
+        const fromBalance = this.getBalanceOfAddress(from);
 
         if(publicKey !== from) {
             console.log('here is the publicKey var ==> ',publicKey);
             throw new Error('your private and public keys dont match up. Check yourself ')
         }
-        // if(transaction.privateKey !== ) {
 
-        // }
-
-        // if(!transaction.isValid()) {
-        //     throw new Error('You cannot add an invalid Terminator to Skynet(s) chain!! Check yourself! ')
-        // }
+        if(fromBalance < amount){
+            console.log('\n' + 'Your balance is: ', fromBalance + '\n' + 'You are trying to send: ', amount);
+            throw new Error('You dont have enough in your wallet balance to send transaction. Pony up big boy! ')
+        }
+       
         const transactionsSanatized = {from: from, to: to, amount: Number(amount), keyPair: keyPair};
         this.pendingTransactions.push(transactionsSanatized); //* this is the mempool
-        console.log(' This is the pending Transactions array', this.pendingTransactions); 
-        
-        
-        // let idHolder = this.getLastBlock().id + 1;
-
+        // console.log(' This is the pending Transactions array', this.pendingTransactions); 
         // console.log('PKEY HERE --->>', privateKey);
         
-        // this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, numAmount, 0, new Date(Date.now()),privateKey)));
-
-        // this.getBalanceOfAddress(to);
-        // return true 
+        
+        
         this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')
           
     }
@@ -143,7 +133,7 @@ class CyberDyneChain {
 
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
-            this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, 0, new Date(Date.now()), this.pendingTransactions[i].keyPair)));
+            this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair)));
             
             idHolder++;
         }
@@ -156,23 +146,14 @@ class CyberDyneChain {
         // block.mineBlock(this.difficulty);
 
         console.log('New Terminator mined! Skynet is growing!');
-        // this.skynet_chain.push(block);
-
-        // this.pendingTransactions = [
-        //     new Transaction(null, miningRewardAddress, this.miningReward)
-        // ];
+    
     }
 
     getBalanceOfAddress(address) {
         let balance = 0;
 
         for(const terminator of this.skynet_chain) {
-            // console.log(terminator)
-            // for(const transaction in terminator.data){
-            console.log(terminator.data.from);
-
-
-
+            // console.log(terminator.data.from);
                 if(terminator.data.from === address) {
                     console.log('from address found\n value: ',terminator.data.value)
                     
@@ -186,16 +167,6 @@ class CyberDyneChain {
                     balance += terminator.data.value;
                     // return balance 
                 }
-                // if(terminator.data.from === address){
-                //     balance -= terminator.data.value;
-                //     console.log('from hit');
-                // }
-
-                // if(terminator.data.to === address) {
-                //     balance += terminator.data.value;
-                //     console.log('to hit');
-                // }
-            // }
         }
         console.log('Here is your freaking balance sir :-)',balance)
         return balance

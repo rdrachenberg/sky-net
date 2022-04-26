@@ -33,6 +33,7 @@ code {
   margin-top: 12%;
   padding: 5%;
   align-items: center;
+  position: relative;
 }
 
 .submit-card {
