@@ -17,12 +17,13 @@ const App = () => {
   const [latest, setLatest] = useState([]);
 
   const [transaction, setTransaction] = useState('');
-  const [fullChain, setFullChain] = useState([])
+  const [fullChain, setFullChain] = useState(false)
 
   const [keyPair, setKeyPair] = useState([]);
   const [balance, setBalance] =useState([])
 
   const [toggle, setToggle] = useState(false);
+  const [showLoadingImg, setShowLoadingImg] = useState(true);
   
   const inputTo = useRef();
   const inputFrom = useRef();
@@ -30,9 +31,6 @@ const App = () => {
 
   const inputAccount = useRef();
   const inputPrivateKey = useRef();
-  const keyPublic = useRef();
-
-  // var socket = io('http://localhost:8000');
 
   const handleLastClick = () => {
    
@@ -119,8 +117,6 @@ const App = () => {
 
   useEffect(() => {
     socket.current = io('ws://localhost:8000');
-     // let socket = io('http://localhost:3010', {transports: ['websocket']});
-    // var socket = io('http://localhost:8000');
 
     socket.current.on('connect', () => {
       console.log(socket.current.id);
@@ -147,16 +143,16 @@ const App = () => {
     })
 
     socket.current.on('keygeneration', (keygen) => {
-      console.log( 'this is whats comming back as keyPair on click ---> ', keyPair);
-      if(keyPair) {
-        // console.log('IS THIS FREKING EVER HIT?');
-        let temp = [];
+      console.log( 'this is whats comming back as keyPair on click ---> ', keygen);
+      // if(keyPair) {
+      //   // console.log('IS THIS FREKING EVER HIT?');
+      //   let temp = [];
 
-        setKeyPair(temp);
-        setKeyPair(keygen);
+      //   setKeyPair(temp);
+      //   setKeyPair(keygen);
 
-        console.log('Keygen hit 2nd time!!')
-      }
+      //   console.log('Keygen hit 2nd time!!')
+      // }
       setKeyPair(keygen);
       console.log('Keygen hit')
       
@@ -177,6 +173,10 @@ const App = () => {
       console.log('server is disconnected! *')
     })
 
+    setTimeout(() => {
+      setShowLoadingImg(false);
+    }, 5000);
+
     return () => {
       socket.current.disconnect(false);
     }
@@ -185,30 +185,40 @@ const App = () => {
   return (
     <div className='container'>
     <MDBContainer>
-      <div className='d-flex justify-content-center align-items-center'style={{ height: '100vh' }}
->
+      <div>
         <div className='text-center'>
-        <h3 className='mb-3'>Cyberdyne Systems</h3>
-       
+        <MDBRow>
+          <div className='interact-header'>
+            <h2>
+           CyberDyne Systems Terminator Chain
+            </h2>
+            <div id='button-div' className='d-flex align-items-start mb-3'>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
+              </MDBCol>
+              
+            </div>
+          </div>
+        </MDBRow>
+        {showLoadingImg?
+        <div>
           <img
             className='mb-4'
             src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
             style={{ flex: 1, width: 250, height: 400, resizeMode: 'contain' }}
           />
-          
-          <p className='mb-3'>Welcome to the Revolution</p>
-          
-          <div id='button-div' className='d-flex align-items-start mb-3'>
-            <MDBCol>
-              <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
-            </MDBCol>
-            <MDBCol>
-              <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
-            </MDBCol>
-            <MDBCol>
-              <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
-            </MDBCol>
+          <h3>Welcome to the Revolution</h3>
           </div>
+         : <></>}
           <div id='table-container'>
           <MDBTable striped className='table-responsive'>
             <MDBTableHead dark>
@@ -241,49 +251,52 @@ const App = () => {
                 })}
         </tbody>
         </MDBTable>
-        </div> 
-        <div id='button-div' className='d-flex align-items-start mb-3'>
-          <MDBCol>
-            <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
-          </MDBCol>
-          <MDBCol>
-            <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
-          </MDBCol>
-          <MDBCol>
-            <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
-          </MDBCol>
-          <MDBCol>
-            <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
-          </MDBCol>
-          
-        </div>
-        <MDBRow></MDBRow>
+      </div> 
         <div>
         <MDBRow>
-        <div className='key-card'></div>
-        <MDBCol>       
-           {keyPair.map((pairs) => {
-             const {keys} = pairs;
-             const {privateKey, publicKey} = keys;
-             return (
-              <MDBCard className='key-card' key ={privateKey} style={{ width: '18rem' }}>
-                <MDBCardImage src='https://cdn.pixabay.com/photo/2017/03/03/13/56/key-2114046_960_720.jpg' alt='...' position='top' />
-                <MDBCardBody>
-                  <MDBCardText id='private-key'>
-                  Private Key: {privateKey}
-                  </MDBCardText>
-                  <MDBCardText id='public-key' onClick={handleCopyPublicKey}>
-                  Public Key: {publicKey}
-                  </MDBCardText>
-                  <MDBBtn tag='a' color='primary' role='button' onClick={handleKeyGeneration}>Generate Another KeyPair</MDBBtn>
-                </MDBCardBody>
-              </MDBCard> 
-             )
-           })}
-           <div>
-            {keyPair ? <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn> : <div>Your keys are above</div>}
-           </div>
-        </MDBCol>
+        <MDBCol>
+        {keyPair? 
+          <div>
+            {keyPair.map((pairs) => {
+                const {keys} = pairs;
+                const {privateKey, publicKey} = keys;
+                return (
+                  <MDBCard className='key-card' key ={privateKey}>
+                    <MDBCardImage src='https://cdn.pixabay.com/photo/2017/03/03/13/56/key-2114046_960_720.jpg' alt='...' position='top' />
+                    <MDBCardBody>
+                      <MDBCardText id='private-key'>
+                      Private Key: {privateKey}
+                      </MDBCardText>
+                      <MDBCardText id='public-key' onClick={handleCopyPublicKey}>
+                      Public Address: {publicKey}
+                      </MDBCardText>
+                      <MDBBtn tag='a' color='primary' role='button' onClick={handleKeyGeneration}>Generate Another KeyPair</MDBBtn>
+                    </MDBCardBody>
+                  </MDBCard> 
+                )
+              })}
+          </div>
+        :
+          (() => {
+            return (
+              <MDBCard className='key-card'>
+              <MDBCardImage src='https://cdn.pixabay.com/photo/2017/03/03/13/56/key-2114046_960_720.jpg' alt='...' position='top' />
+              <MDBCardBody>
+                <MDBCardText id='private-key'>
+                Private Key: 
+                </MDBCardText>
+                <MDBCardText id='public-key'>
+                Public Key:
+                </MDBCardText>
+                <MDBBtn tag='a' color='primary' role='button' onClick={handleKeyGeneration}>Generate a KeyPair</MDBBtn>
+              </MDBCardBody>
+            </MDBCard> 
+            )
+          })
+            
+          
+         } 
+         </MDBCol>
         <MDBCol>
           <form className='submit-card glowing'>
             <p className="h4 text-center mb-4">Submit transaction</p>

@@ -5,6 +5,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.account-balance {
+  color: gold;
+  font-size: large;
+}
+
 .balance-card {
   position: relative;
   height: auto;
@@ -17,35 +29,17 @@ body {
   margin-bottom: 20px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-.account-balance {
-  color: gold;
-  font-size: large;
+#button-div {
+  margin: 2%;
 }
 
 .container {
   display: flex;
-  margin: 5%;
-  margin-top: 12%;
-  padding: 5%;
+  margin: 1%;
+  
+  
   align-items: center;
   position: relative;
-}
-
-.submit-card {
-  position: relative;
-  height: auto;
-  width: 500px;
-  display: block;
-  background: linear-gradient(0deg, black, #444444);
-  border-radius: 10px;
-  color: white;
-  padding: 25px;
-  margin-bottom: 20px;
 }
 
 .glowing::before {
@@ -60,6 +54,18 @@ code {
   z-index: -1;
   border-radius: 10px;
   animation: glower 25s linear infinite;
+}
+
+.interact-header {
+  position: relative;
+  height: auto;
+  width: 500px;
+  display: block;
+  background: linear-gradient(0deg, black, #444444);
+  border-radius: 10px;
+  color: white;
+  padding: 25px;
+  margin-bottom: 2%;  
 }
 
 @keyframes glower {
@@ -78,19 +84,29 @@ code {
 .key-card {
   position: relative;
   height: auto;
-  width: 500px;
+  
+  display: block;
+  background: linear-gradient(0deg, black, #444444);
+  border-radius: 10px;
+  color: white;
+  /* padding: 25px; */
+  margin-bottom: 10px;
+}
+
+#private-key {
+  font-weight: bolder;
+}
+
+.submit-card {
+  position: relative;
+  height: auto;
+  width: auto;
   display: block;
   background: linear-gradient(0deg, black, #444444);
   border-radius: 10px;
   color: white;
   padding: 25px;
   margin-bottom: 20px;
-}
-
-.key-card {}
-
-#private-key {
-  font-weight: bolder;
 }
 
 #table-container {
@@ -102,7 +118,7 @@ code {
   overflow-y: scroll;
   border: 1px solid;
   border-radius: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 1%;
 }
 
 .table-responsive {

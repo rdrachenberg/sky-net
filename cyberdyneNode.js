@@ -107,7 +107,7 @@ let initHttpServer = (server) => {
             let to = null;
             let value = null;
             idHolder = startCyberDyneChain.getLastBlock().id + 1;
-            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, 5, 'manual block added')));
+            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, new Date(Date.now()), 5, 'manual block added')));
             io.to("data-room").emit("data", JSON.stringify(blockchain));
         })
 
