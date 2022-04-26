@@ -3,9 +3,10 @@ const crypto = require('crypto'), SHA256 = message => crypto.createHash('sha256'
 const Elliptic = require( 'elliptic');
 
 const ec = new Elliptic.ec('secp256k1');
+const keccak256 = require('js-sha3').keccak256;
 // const MINT_PRIVATE_KEY = process.env.MINT_PRIVATE_ADDRESS;
 // const MINT_KEY_PAIR = ec.keyFromPrivate(MINT_PRIVATE_KEY, 'hex');
-let mintCounter = 0;
+let address;
 
 class Transaction { // define and export class with a constructor 
     constructor(from, to, value, fee, dateCreated, data) { // when class is initiated, it will take in from address, to address, and value
@@ -15,7 +16,7 @@ class Transaction { // define and export class with a constructor
         this.fee = fee;
         this.dateCreated = dateCreated;
         this.data = data;
-        this.senderPubKey = from;
+        this.senderPubKey = '';
         this.transactionDataHash = this.makeHash();
         this.senderSignature = [this.mintTransactionSignature(this.data)];
     }
@@ -54,7 +55,31 @@ class Transaction { // define and export class with a constructor
             
             let passedInPKey = ec.keyFromPrivate(signingKey, 'hex');
 
-            if(passedInPKey.getPublic('hex') !== this.from && this.data != 'Genisis transaction') { // if the public signing key is NOT the same as the senders address
+            const privateKey = passedInPKey.getPrivate('hex');
+
+            const generatorPoint = passedInPKey.ec.g; // sep256k1 generator point generation
+            const pubKeyCoordinates = generatorPoint.mul(privateKey);
+
+            const x = pubKeyCoordinates.getX().toString('hex');
+            const y = pubKeyCoordinates.getY().toString('hex');
+
+            const concatPublicKey = x + y;
+
+            // console.log('concat is here ---> ', concatPublicKey)
+            const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
+
+            console.log('here is the hash of the Public Key: ',hashOfPublicKey);
+
+            const ethAddressBuffer = Buffer.from(hashOfPublicKey);
+
+            const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
+
+            address = '0x'+ addressBuffer;
+
+            console.log('address transactions', address);
+            console.log('this.from transactions', this.from);
+
+            if(address !== this.from && this.data != 'Genisis transaction') { // if the public signing key is NOT the same as the senders address
                 throw new Error('You must own the wallet to sign for it!'); // Throw error and pass message 
                 
             }
@@ -66,6 +91,8 @@ class Transaction { // define and export class with a constructor
             this.signature = sign.toDER('hex');
 
             console.log('Signature: ', this.signature);
+
+            this.senderPubKey = passedInPKey.getPublic('hex');
 
             return this.signature
         // }
@@ -80,11 +107,11 @@ class Transaction { // define and export class with a constructor
         }
         const signingKey = this.data;
 
-        if(signingKey.getPublic('hex') !== this.from) {
+        if(address !== this.from) {
             throw new Error('You must own the wallet to sign for it!'); // Throw error and pass message 
         }
 
-        const publicKey = ec.keyFromPublic(this.from, 'hex');
+        const publicKey = ec.keyFromPublic(this.senderPubKey, 'hex');
 
         console.log('Here is the signature: ', this.signature);
 

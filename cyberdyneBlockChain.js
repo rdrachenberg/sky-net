@@ -14,12 +14,32 @@ const server = http.createServer(app);
 
 const Elliptic = require( 'elliptic');
 const ec = new Elliptic.ec('secp256k1');
+const keccak256 = require('js-sha3').keccak256;
 
 const MINT_PRIVATE_KEY = process.env.MINT_PRIVATE_ADDRESS
 const MINT_PUBLIC_ADDRESS = process.env.MINT_PUBLIC_ADDRESS;
 const MINT_KEY_PAIR = ec.keyFromPrivate( MINT_PRIVATE_KEY,'hex');
 
 let keyPair;
+
+const generatorPoint = MINT_KEY_PAIR.ec.g; // sep256k1 generator point generation
+    const pubKeyCoordinates = generatorPoint.mul(MINT_PRIVATE_KEY);
+
+    const x = pubKeyCoordinates.getX().toString('hex');
+    const y = pubKeyCoordinates.getY().toString('hex');
+
+    const concatPublicKey = x + y;
+
+    // console.log('concat is here ---> ', concatPublicKey)
+    const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
+
+    console.log('here is the hash of the Public Key: ',hashOfPublicKey);
+
+    const ethAddressBuffer = Buffer.from(hashOfPublicKey);
+
+    const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
+
+    const address = '0x'+ addressBuffer;
 
 class CyberDyneChain {
     constructor() {
@@ -62,7 +82,7 @@ class CyberDyneChain {
         // console.log(firstHash);
         // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
         // {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}
-        return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', '0485ff3ed5243842afac52a76a3f8e56e993b9ff155667e9a1a0dc33967d6384096186f42fe24143316ea84634e22093c9f559675bab264c25a38dab742ef972fa', 10000000, 0, 'Genisis transaction'), firstHash);
+        return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', address, 10000000, 0, 'Genisis transaction'), firstHash);
     }
     
     createHash(toHash) {
@@ -101,8 +121,30 @@ class CyberDyneChain {
         const publicKey = keyPair.getPublic('hex');
         const fromBalance = this.getBalanceOfAddress(from);
 
-        if(publicKey !== from) {
-            console.log('here is the publicKey var ==> ',publicKey);
+        const generatorPoint = keyPair.ec.g; // sep256k1 generator point generation
+        const pubKeyCoordinates = generatorPoint.mul(privateKey);
+
+        const x = pubKeyCoordinates.getX().toString('hex');
+        const y = pubKeyCoordinates.getY().toString('hex');
+
+        const concatPublicKey = x + y;
+
+        // console.log('concat is here ---> ', concatPublicKey)
+        const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
+
+        console.log('here is the hash of the Public Key: ',hashOfPublicKey);
+
+        const ethAddressBuffer = Buffer.from(hashOfPublicKey);
+
+        const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
+
+        const address = '0x'+ addressBuffer;
+
+        console.log('here is the address var --> ', address + '\n')
+        console.log('here is the from var --> ', from)
+
+        if(address !== from) {
+            console.log('here is the address var ==> ',address);
             throw new Error('your private and public keys dont match up. Check yourself ')
         }
 

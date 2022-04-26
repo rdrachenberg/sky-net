@@ -36,6 +36,7 @@
     "elliptic": "^6.5.4",
     "express": "^4.17.2",
     "http": "^0.0.1-security",
+    "js-sha3": "^0.8.0",
     "mdbreact": "^5.2.0",
     "path": "^0.12.7",
     "socket.io": "^4.4.1",

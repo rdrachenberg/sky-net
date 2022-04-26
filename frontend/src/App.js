@@ -260,12 +260,13 @@ const App = () => {
         <MDBRow></MDBRow>
         <div>
         <MDBRow>
+        <div className='key-card'></div>
         <MDBCol>       
            {keyPair.map((pairs) => {
              const {keys} = pairs;
              const {privateKey, publicKey} = keys;
              return (
-              <MDBCard key ={privateKey} style={{ width: '18rem' }}>
+              <MDBCard className='key-card' key ={privateKey} style={{ width: '18rem' }}>
                 <MDBCardImage src='https://cdn.pixabay.com/photo/2017/03/03/13/56/key-2114046_960_720.jpg' alt='...' position='top' />
                 <MDBCardBody>
                   <MDBCardText id='private-key'>
@@ -274,10 +275,14 @@ const App = () => {
                   <MDBCardText id='public-key' onClick={handleCopyPublicKey}>
                   Public Key: {publicKey}
                   </MDBCardText>
+                  <MDBBtn tag='a' color='primary' role='button' onClick={handleKeyGeneration}>Generate Another KeyPair</MDBBtn>
                 </MDBCardBody>
               </MDBCard> 
              )
-           })}     
+           })}
+           <div>
+            {keyPair ? <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn> : <div>Your keys are above</div>}
+           </div>
         </MDBCol>
         <MDBCol>
           <form className='submit-card glowing'>

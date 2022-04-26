@@ -75,6 +75,19 @@ code {
     background-position: 0 0;
   }
 }
+.key-card {
+  position: relative;
+  height: auto;
+  width: 500px;
+  display: block;
+  background: linear-gradient(0deg, black, #444444);
+  border-radius: 10px;
+  color: white;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.key-card {}
 
 #private-key {
   font-weight: bolder;
