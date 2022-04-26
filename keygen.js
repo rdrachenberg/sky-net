@@ -13,23 +13,23 @@ const generateKeys = () => {
     const privateKey = key.getPrivate('hex');
 
     const generatorPoint = key.ec.g; // sep256k1 generator point generation
-    const pubKeyCoordinates = generatorPoint.mul(privateKey);
+    const pubKeyCoordinates = generatorPoint.mul(privateKey); // generatorPoint multiplied by privateKey
 
-    const x = pubKeyCoordinates.getX().toString('hex');
-    const y = pubKeyCoordinates.getY().toString('hex');
+    const x = pubKeyCoordinates.getX().toString('hex'); // get x coordinates to string 
+    const y = pubKeyCoordinates.getY().toString('hex'); // get y coordinates to string 
 
-    const concatPublicKey = x + y;
+    const concatPublicKey = x + y; // concatinate the x & y vars 
 
     // console.log('concat is here ---> ', concatPublicKey)
-    const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
+    const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex')) // create a var to hash the concatPublicKey in a Buffer
 
-    console.log('here is the hash of the Public Key: ',hashOfPublicKey);
+    // console.log('here is the hash of the Public Key: ',hashOfPublicKey);
 
-    const ethAddressBuffer = Buffer.from(hashOfPublicKey);
+    const ethAddressBuffer = Buffer.from(hashOfPublicKey); // create a var to hold a Buffer of the var hashOfPublicKey
 
-    const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
+    const addressBuffer = ethAddressBuffer.slice(-20).toString('hex'); // strip ethAddressBuffer of the first 20 characters
 
-    const address = '0x'+ addressBuffer;
+    const address = '0x'+ addressBuffer; // add eth '0x' formating to the begining of the account string 
 
 
     // console.log(key.ec.g);
