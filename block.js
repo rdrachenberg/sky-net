@@ -8,7 +8,7 @@ const MINT_PUBLIC_ADDRESS = MINT_KEY_PAIR.getPublic('hex');
 
 
 class Terminator {
-    constructor(id, timestamp, data, prevHash, difficulty = 1) {
+    constructor(id, timestamp, data, prevHash, difficulty = 4) {
         this.id = id;
         this.timestamp =timestamp;
         this.blockHash = this.makeHash(); 

@@ -20,6 +20,7 @@ const App = () => {
   const [fullChain, setFullChain] = useState(false)
 
   const [keyPair, setKeyPair] = useState([]);
+  const [keyPairData, setKeyPairData] = useState(false)
   const [balance, setBalance] =useState([])
 
   const [toggle, setToggle] = useState(false);
@@ -89,8 +90,10 @@ const App = () => {
   }
 
   const handleKeyGeneration = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
+    
     socket.current.emit('keygen');
+    setKeyPairData(true);
     // setKeyPair(keygen);
   }
 
@@ -147,10 +150,8 @@ const App = () => {
       // if(keyPair) {
       //   // console.log('IS THIS FREKING EVER HIT?');
       //   let temp = [];
-
       //   setKeyPair(temp);
       //   setKeyPair(keygen);
-
       //   console.log('Keygen hit 2nd time!!')
       // }
       setKeyPair(keygen);
@@ -254,9 +255,9 @@ const App = () => {
       </div> 
         <div>
         <MDBRow>
-        <MDBCol>
-        {keyPair? 
-          <div>
+        <MDBCol className='flex-row'>
+        {keyPairData? 
+          <div className='key-card'>
             {keyPair.map((pairs) => {
                 const {keys} = pairs;
                 const {privateKey, publicKey} = keys;
@@ -274,29 +275,26 @@ const App = () => {
                     </MDBCardBody>
                   </MDBCard> 
                 )
-              })}
+            })}
           </div>
-        :
-          (() => {
-            return (
-              <MDBCard className='key-card'>
+          : 
+          <div className='key-card'>
+            <MDBCard className='key-card'>
               <MDBCardImage src='https://cdn.pixabay.com/photo/2017/03/03/13/56/key-2114046_960_720.jpg' alt='...' position='top' />
               <MDBCardBody>
                 <MDBCardText id='private-key'>
                 Private Key: 
                 </MDBCardText>
                 <MDBCardText id='public-key'>
-                Public Key:
+                Public Address:
                 </MDBCardText>
-                <MDBBtn tag='a' color='primary' role='button' onClick={handleKeyGeneration}>Generate a KeyPair</MDBBtn>
+                <MDBBtn tag='a' color='primary' role='button' onClick={handleKeyGeneration}>Generate KeyPair</MDBBtn>
               </MDBCardBody>
             </MDBCard> 
-            )
-          })
-            
+          </div>
+        }
           
-         } 
-         </MDBCol>
+        </MDBCol>  
         <MDBCol>
           <form className='submit-card glowing'>
             <p className="h4 text-center mb-4">Submit transaction</p>
@@ -361,6 +359,7 @@ const App = () => {
               type="text"
               id="address"
               className="form-control"
+              defaultValue={'0x6539306131623561393631346330396530386166'}
             />
             <br />
             <div className='account-balance'>

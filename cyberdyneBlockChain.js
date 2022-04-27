@@ -100,12 +100,11 @@ class CyberDyneChain {
     addBlock(newBlock) {
         newBlock.prevHash = this.getLastBlock().blockHash;
         newBlock.blockHash = newBlock.makeHash();
-        // console.log('this.skynet_chain[this.skynet_chain.length -1].blockHash: this ---->',this.skynet_chain[this.skynet_chain.length -1].blockHash)
-
+        
         this.nonce++;
-        // let previousHash = this.skynet_chain.length !== 0 ? this.skynet_chain[this.skynet_chain.length -1].blockHash : '';  test for previous has or make empty string 
-
         this.skynet_chain.push(newBlock); 
+        // console.log('this.skynet_chain[this.skynet_chain.length -1].blockHash: this ---->',this.skynet_chain[this.skynet_chain.length -1].blockHash)
+        // let previousHash = this.skynet_chain.length !== 0 ? this.skynet_chain[this.skynet_chain.length -1].blockHash : '';  test for previous has or make empty string 
     }
 
     addTransaction(transaction) {
@@ -139,10 +138,8 @@ class CyberDyneChain {
         const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
 
         const address = '0x'+ addressBuffer;
-
-        console.log('here is the address var --> ', address + '\n')
-        console.log('here is the from var --> ', from)
-
+        // console.log('here is the address var --> ', address + '\n')
+        // console.log('here is the from var --> ', from)
         if(address !== from) {
             console.log('here is the address var ==> ',address);
             throw new Error('your private and public keys dont match up. Check yourself ')
@@ -165,18 +162,16 @@ class CyberDyneChain {
     }
 
     minePendingTransactions(miningRewardAddress) {
-        // const latestBlock = this.getLastBlock(this.getHeight());
-
-        // let i = startCyberdyneChain.this.nonce;
-
+        
         let idHolder = this.getLastBlock().id + 1;
 
         // console.log('PKEY HERE --->>', privateKey);
 
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
-            this.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair)));
+            let terminator = new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair))
             
+            this.addBlock(terminator);
             idHolder++;
         }
 
