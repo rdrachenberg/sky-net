@@ -225,6 +225,7 @@ const App = () => {
             <MDBTableHead dark>
             <tr>
               <th scope='col' style={{maxwidth: "10%"}}>Terminator#</th>
+              <th scope='col'>Mint ID</th>
               <th scope='col'>Time</th>
               <th scope='col'>Hash</th>
               <th scope='col'>Previous Hash</th>
@@ -240,6 +241,7 @@ const App = () => {
                   const {from, to, value} = data;
                   return (
                     <tr key = {id} >
+                      <td>{nonce}</td>
                       <td onClick={handleModal}>{id}</td>
                       <td>{timestamp}</td>
                       <td>{blockHash}</td>

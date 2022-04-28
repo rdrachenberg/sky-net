@@ -1,5 +1,6 @@
 const crypto = require('crypto'), SHA256 = message => crypto.createHash('sha256').update(message).digest('hex');
 const EC = require('elliptic').ec, ec = new EC('secp256k1');
+const { info } = require('console');
 const Transaction = require('./transactions');
 
 const MINT_PRIVATE_ADDRESS = process.env.MINT_PRIVATE_ADDRESS;
@@ -48,7 +49,8 @@ class Terminator {
         }
 
         console.log('Skynet mined another Terminator: #', this.nonce + '\n' + this.blockHash); 
-        return this.blockHash;
+        const infoNeeded = {blockHash:this.blockHash, nonce: this.nonce}
+        return infoNeeded;
     }
 }
 

@@ -157,7 +157,7 @@ class CyberDyneChain {
         
         
         
-        this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')
+        // this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')
           
     }
 
@@ -179,14 +179,14 @@ class CyberDyneChain {
                         // this.addBlock(terminator);
                     } else {
                         reject('Something went incredibly wrong! lol')
-                    }
-                    
+                    }  
                 })
-            
             }
 
             mine().then((res) => {
-                terminator.blockHash = res 
+                let {blockHash, nonce} = res;
+                terminator.blockHash = blockHash
+                terminator.nonce = nonce 
                 this.addBlock(terminator);
             })
             

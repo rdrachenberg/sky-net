@@ -32,8 +32,8 @@ let idHolder = last.id + 1;
 const privateKey = process.env.NODE_PRIVATE_KEY || ec.genKeyPair().getPrivate('hex');
 const keyPair = ec.keyFromPrivate(privateKey, 'hex');
 const publicKey = keyPair.getPublic('hex');
-// console.log('here is the Private Key:',privateKey);
-// console.log('here is hte public key',publicKey);
+console.log('here is the Private Key:',privateKey);
+console.log('here is hte public key',publicKey);
 
 const MINT_PRIVATE_ADDRESS = process.env.MINT_PRIVATE_ADDRESS;
 const MINT_KEY_PAIR = ec.keyFromPrivate(MINT_PRIVATE_ADDRESS, 'hex');
@@ -103,12 +103,13 @@ let initHttpServer = (server) => {
         })
 
         socket.on("add-block", async () => {
-            let from = null;
-            let to = null;
-            let value = null;
-            idHolder = startCyberDyneChain.getLastBlock().id + 1;
-            startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, new Date(Date.now()), 5, 'manual block added')));
-            io.to("data-room").emit("data", JSON.stringify(blockchain));
+            startCyberDyneChain.minePendingTransactions(publicKey)
+            // let from = null;
+            // let to = null;
+            // let value = null;
+            // idHolder = startCyberDyneChain.getLastBlock().id + 1;
+            // startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, new Date(Date.now()), 5, 'manual block added')));
+            // io.to("data-room").emit("data", JSON.stringify(blockchain));
         })
 
         socket.on('transaction', (transaction) => {
