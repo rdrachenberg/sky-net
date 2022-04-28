@@ -6,21 +6,21 @@ const MINT_PRIVATE_ADDRESS = process.env.MINT_PRIVATE_ADDRESS;
 const MINT_KEY_PAIR = ec.keyFromPrivate(MINT_PRIVATE_ADDRESS, 'hex');
 const MINT_PUBLIC_ADDRESS = MINT_KEY_PAIR.getPublic('hex');
 
+const { log16 } = require('./utils');
+
 
 class Terminator {
-    constructor(id, timestamp, data, prevHash, difficulty = 4) {
+    constructor(id, timestamp, data, prevHash, difficulty = 2) {
         this.id = id;
         this.timestamp =timestamp;
         this.blockHash = this.makeHash(); 
         this.prevHash = prevHash;
         this.data = data; 
         this.difficulty = difficulty;
-        this.nonce = id;
+        // this.nonce = id;
     }
 
     makeHash() {
-        // console.log('this is the freaking Cyberdyne Hash ------> ', SHA256(this.id + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString());
-        this.nonce = this.id; // set nonce equal to id. This will be used as a security check
         return SHA256(this.id.toString() + this.timestamp + this.prevHash + JSON.stringify(this.data) + this.nonce).toString(); // return hash using SHA256 imported library
     }   
 
@@ -35,13 +35,30 @@ class Terminator {
     }
 
     mineBlock(difficulty) {
+       console.log(difficulty);
+       
+        this.nonce = difficulty;
+
         while(this.blockHash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
+            console.log(this.blockHash.substring(0, difficulty));
+            console.log(Array(difficulty + 1).join('0'));
+            
             this.nonce++;
             this.blockHash = this.makeHash();
         }
 
         console.log('Skynet mined another Terminator: #', this.nonce + '\n' + this.blockHash); 
+        return this.blockHash;
     }
 }
 
+// let block = new Terminator(2, new Date(Date.now()), new Transaction('0x6539306131623561393631346330396530386166', '0x6663636139613138626532306462636231633162', 5000, 5, new Date(Date.now()), MINT_PRIVATE_ADDRESS), '91097d8a03662508ab3cc465c7c9cf86d52d7322258bba6e1a275c0f6eafce61');
+
+
+// block.mineBlock(4);
+
 module.exports = Terminator;
+
+/*
+let terminator = new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair))
+*/

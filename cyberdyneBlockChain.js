@@ -99,7 +99,7 @@ class CyberDyneChain {
 
     addBlock(newBlock) {
         newBlock.prevHash = this.getLastBlock().blockHash;
-        newBlock.blockHash = newBlock.makeHash();
+        newBlock.blockHash = newBlock.blockHash;
         
         this.nonce++;
         this.skynet_chain.push(newBlock); 
@@ -171,7 +171,25 @@ class CyberDyneChain {
 
             let terminator = new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair))
             
-            this.addBlock(terminator);
+            const mine = () => {
+                return new Promise((resolve, reject) => {
+                    const error = false;
+                    if (!error) {
+                        resolve(terminator.mineBlock(this.difficulty));
+                        // this.addBlock(terminator);
+                    } else {
+                        reject('Something went incredibly wrong! lol')
+                    }
+                    
+                })
+            
+            }
+
+            mine().then((res) => {
+                terminator.blockHash = res 
+                this.addBlock(terminator);
+            })
+            
             idHolder++;
         }
 
