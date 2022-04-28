@@ -11,7 +11,7 @@ const { log16 } = require('./utils');
 
 
 class Terminator {
-    constructor(id, timestamp, data, prevHash, difficulty = 2) {
+    constructor(id, timestamp, data, prevHash, difficulty) {
         this.id = id;
         this.timestamp =timestamp;
         this.blockHash = this.makeHash(); 

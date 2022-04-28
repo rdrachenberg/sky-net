@@ -2,7 +2,7 @@ import  { Component, useState, useEffect, useCallback, Fragment, useRef } from '
 import { MDBTable, MDBTableHead, MDBTableBody,  MDBBtn, MDBContainer, MDBCol, MDBRow, MDBIcon, MDBCard, MDBCardBody, MDBCardText, MDBCardImage } from 'mdb-react-ui-kit';
 import {io} from 'socket.io-client';
 import { emit } from 'process';
-import ModalPage from './blockchainModal';
+import Modal from './blockchainModal';
 
 
 const defaultMessage = 'Here is some default text blase blase'
@@ -115,7 +115,8 @@ const App = () => {
 
   const handleModal = (e) => {
     e.preventDefault();
-    setToggle(true);
+    setToggle(!toggle);
+    console.log(toggle);
   }
 
   useEffect(() => {
@@ -224,8 +225,8 @@ const App = () => {
           <MDBTable striped className='table-responsive'>
             <MDBTableHead dark>
             <tr>
-              <th scope='col' style={{maxwidth: "10%"}}>Terminator#</th>
               <th scope='col'>Mint ID</th>
+              <th scope='col' style={{maxwidth: "10%"}}>Terminator#</th>
               <th scope='col'>Time</th>
               <th scope='col'>Hash</th>
               <th scope='col'>Previous Hash</th>
@@ -236,25 +237,41 @@ const App = () => {
             </tr>
           </MDBTableHead>
           <tbody>
-                {data.map((item) => {
-                  const { id, timestamp, nonce, blockHash, prevHash, data} = item;
-                  const {from, to, value} = data;
-                  return (
-                    <tr key = {id} >
-                      <td>{nonce}</td>
-                      <td onClick={handleModal}>{id}</td>
-                      <td>{timestamp}</td>
-                      <td>{blockHash}</td>
-                      <td>{prevHash}</td>
-                      <td>{from}</td>
-                      <td>{to}</td>
-                      <td>{value}</td>
-                    </tr>
-                  )
-                })}
+            {data.map((item) => {
+              const { id, timestamp, nonce, blockHash, prevHash, data} = item;
+              const {from, to, value} = data;
+              return (
+                <tr key = {id} onClick={handleModal}>
+                  <td>{id}</td>
+                  <td>{nonce}</td>
+                  <td>{timestamp}</td>
+                  <td>{blockHash}</td>
+                  <td>{prevHash}</td>
+                  <td>{from}</td>
+                  <td>{to}</td>
+                  <td>{value}</td>
+                </tr>
+              )
+            })}
         </tbody>
         </MDBTable>
       </div>
+      
+      {toggle? 
+        <div>
+        
+        <Modal />
+        </div>
+         
+        
+      
+      :
+      <></>
+        
+      
+    }
+      
+      
       <MDBRow>
           <div className='interact'>
             <div id='button-div' className='d-flex align-items-start mb-3'>

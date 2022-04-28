@@ -44,7 +44,7 @@ const generatorPoint = MINT_KEY_PAIR.ec.g; // sep256k1 generator point generatio
 class CyberDyneChain {
     constructor() {
         this.skynet_chain = [this.mineGenesisBlock()];
-        this.difficulty = 3;
+        this.difficulty = 2;
         this.pendingTransactions = [];
         this.miningReward = 22;
     }

@@ -83,6 +83,8 @@ class Transaction { // define and export class with a constructor
                 throw new Error('You must own the wallet to sign for it!'); // Throw error and pass message 
                 
             }
+
+            this.data = '';
     
             this.hash = this.makeHash(); // make this.hash eqaul to function makeHash
 

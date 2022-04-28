@@ -1,34 +1,39 @@
-import React, { Component } from 'react';
-import { MDBContainer, MDBBtn, MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter } from 'mdbreact';
+import React, { useState } from 'react';
+import { MDBBtn,
+  MDBModal,
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody,
+  MDBModalFooter,
+} from 'mdb-react-ui-kit';
 
-class ModalPage extends Component {
-  state = {
-    modal: false
-  };
+export default function Modal() {
+  const [basicModal, setBasicModal] = useState(true);
 
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
-  }
-  render() {
-    return (
-      <MDBContainer>
-        {/* BUTTON */}
-        <MDBBtn color="info" onClick={this.toggle}>Click</MDBBtn>
-        {/* MODAL */}
-        <MDBModal isOpen={this.state.modal} toggle={this.toggle}    >
-          <MDBModalHeader toggle={this.toggle}>MDBModal title</MDBModalHeader>
-          <MDBModalBody>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </MDBModalBody>
+  const toggleShow = () => setBasicModal(!basicModal);
+
+  return (
+    <>
+    <MDBModal show={basicModal} setShow={setBasicModal}tabIndex='-1'>
+      <MDBModalDialog>
+        <MDBModalContent>
+          <MDBModalHeader>
+            <MDBModalTitle>Terminator Block Info</MDBModalTitle>
+            <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
+          </MDBModalHeader>
+          <MDBModalBody>...</MDBModalBody>
+
           <MDBModalFooter>
-            <MDBBtn color="secondary" onClick={this.toggle}>Close</MDBBtn>
-            <MDBBtn color="primary">Save changes</MDBBtn>
+            <MDBBtn color='secondary' onClick={toggleShow}>
+              Close
+            </MDBBtn>
+            <MDBBtn>Save changes</MDBBtn>
           </MDBModalFooter>
-        </MDBModal>
-      </MDBContainer>
-    );
-  }
+        </MDBModalContent>
+      </MDBModalDialog>
+    </MDBModal>
+    </>
+  );
 }
-export default ModalPage;
