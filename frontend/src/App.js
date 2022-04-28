@@ -254,7 +254,26 @@ const App = () => {
                 })}
         </tbody>
         </MDBTable>
-      </div> 
+      </div>
+      <MDBRow>
+          <div className='interact'>
+            <div id='button-div' className='d-flex align-items-start mb-3'>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
+              </MDBCol>
+              
+            </div>
+          </div>
+        </MDBRow> 
         <div>
         <MDBRow>
         <MDBCol className='flex-row'>

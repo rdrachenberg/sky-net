@@ -18,7 +18,7 @@ class Terminator {
         this.prevHash = prevHash;
         this.data = data; 
         this.difficulty = difficulty;
-        // this.nonce = id;
+        this.nonce = id;
     }
 
     makeHash() {
