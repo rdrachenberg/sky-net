@@ -7,175 +7,175 @@
     "peers": {},
     "chain": {
     "blocks": [
-    {
-    "index": 0,
-    "transactions": [
-    {
-    "from": "0000000000000000000000000000000000000000",
-    "to": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
-    "value": 1000000000000,
-    "fee": 0,
-    "dateCreated": "2018-01-01T00:00:00.000Z",
-    "data": "genesis tx",
-    "senderPubKey": "00000000000000000000000000000000000000000000000000000000000000000",
-    "transactionDataHash": "8a684cb8491ee419e7d46a0fd2438cad82d1278c340b5d01974e7beb6b72ecc2",
-    "senderSignature": [
-    "0000000000000000000000000000000000000000000000000000000000000000",
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    ],
-    "minedInBlockIndex": 0,
-    "transferSuccessful": true
-    }
-    ],
-    "difficulty": 0,
-    "minedBy": "0000000000000000000000000000000000000000",
-    "blockDataHash": "15cc5052fb3c307dd2bfc6bcaa057632250ee05104e4fb7cc75e59db1a92cefc",
-    "nonce": 0,
-    "dateCreated": "2018-01-01T00:00:00.000Z",
-    "blockHash": "c6da93eb4249cb5ff4f9da36e2a7f8d0d61999221ed6910180948153e71cc47f"
-    },
-    {
-    "index": 1,
-    "transactions": [
-    {
-    "from": "0000000000000000000000000000000000000000",
-    "to": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
-    "value": 5000020,
-    "fee": 0,
-    "dateCreated": "2022-03-22T20:02:02.465Z",
-    "data": "coinbase tx",
-    "senderPubKey": "00000000000000000000000000000000000000000000000000000000000000000",
-    "transactionDataHash": "529db6e02992d87a6109e8a7ffc963834bb2dfd5668648ea5d2b97f5dd11e43c",
-    "senderSignature": [
-    "0000000000000000000000000000000000000000000000000000000000000000",
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    ],
-    "minedInBlockIndex": 1,
-    "transferSuccessful": true
-    },
-    {
-    "from": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
-    "to": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
-    "value": 500000,
-    "fee": 10,
-    "dateCreated": "2022-03-22T19:47:02.420Z",
-    "data": "Faucet -> Alice",
-    "senderPubKey": "8c4431db61e9095d5794ff53a3ae4171c766cadef015f2e11bec22b98a80f74a0",
-    "transactionDataHash": "4acf595427076604abe786e70ff01b97ffe85c64c62454b6698443cf8237c9ba",
-    "senderSignature": [
-    "c955ebbe7bd2081db8f34339ac5a68ad4486312220317825cbb5f1b99e2ca3ef",
-    "4bc86bff370b243e9a2e1c4a777061fcc7dfe6b4fd45d0f6bf95139a3581e206"
-    ],
-    "minedInBlockIndex": 1,
-    "transferSuccessful": true
-    },
-    {
-    "from": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
-    "to": "b3d72ad831b3e9cdbdaeda5ff4ae8e9cf182e548",
-    "value": 700000,
-    "fee": 10,
-    "dateCreated": "2022-03-22T19:48:42.430Z",
-    "data": "Faucet -> Bob",
-    "senderPubKey": "8c4431db61e9095d5794ff53a3ae4171c766cadef015f2e11bec22b98a80f74a0",
-    "transactionDataHash": "9df8b36532a9c321dd6b9742dc45554e73bb226ef8aa1c6354f33254eb042a6a",
-    "senderSignature": [
-    "694bc6ca80f6e77854511a3c150d83601ef217ed8d296ce9a04cb90a380860f5",
-    "d013f8081048a3f20826d8716b50d7e291121ebab75b77bd4ba743267dafea3c"
-    ],
-    "minedInBlockIndex": 1,
-    "transferSuccessful": true
-    }
-    ],
-    "difficulty": 1,
-    "prevBlockHash": "c6da93eb4249cb5ff4f9da36e2a7f8d0d61999221ed6910180948153e71cc47f",
-    "minedBy": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
-    "blockDataHash": "216291f6a079b52710de90539220120b6520d10984fea7f51d0fefd4df40a8a4",
-    "nonce": 12,
-    "dateCreated": "2022-03-22T20:02:02.466Z",
-    "blockHash": "012a7bb6ccb9121cd5d5e5db57c093e0854b066b17c19d5ad0f8dc7acdcec62a"
-    },
-    {
-    "index": 2,
-    "transactions": [
-    {
-    "from": "0000000000000000000000000000000000000000",
-    "to": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
-    "value": 5000040,
-    "fee": 0,
-    "dateCreated": "2022-03-22T20:02:02.479Z",
-    "data": "coinbase tx",
-    "senderPubKey": "00000000000000000000000000000000000000000000000000000000000000000",
-    "transactionDataHash": "9fd87f041429cd5d9b0b23b96292599972442a232cdeaf88f4f33f488d5bc764",
-    "senderSignature": [
-    "0000000000000000000000000000000000000000000000000000000000000000",
-    "0000000000000000000000000000000000000000000000000000000000000000"
-    ],
-    "minedInBlockIndex": 2,
-    "transferSuccessful": true
-    },
-    {
-    "from": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
-    "to": "b3d72ad831b3e9cdbdaeda5ff4ae8e9cf182e548",
-    "value": 400000,
-    "fee": 20,
-    "dateCreated": "2022-03-22T19:50:22.433Z",
-    "data": "Alice -> Bob",
-    "senderPubKey": "30f9d17cff6b8a182df541e86344516a774c450be73d0a05624a9db7748c74cf1",
-    "transactionDataHash": "bed2072abf303e33d6f64dd267d7f8ab3b9e522ea369abdae0607c0d20acfbea",
-    "senderSignature": [
-    "a615a1ad6b1b98ab245f512cc3eb80ee03a0c58430830c41dfa8f45189239200",
-    "2854cbf537144b48f9a911f121518ef91733f2e1bac3ac5eda84a0129446576a"
-    ],
-    "minedInBlockIndex": 2,
-    "transferSuccessful": true
-    },
-    {
-    "from": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
-    "to": "22e2864c613e4f778bb25ddb2b0022d1fbb11c8c",
-    "value": 400000,
-    "fee": 20,
-    "dateCreated": "2022-03-22T19:50:22.436Z",
-    "data": "Alice -> Peter (no funds)",
-    "senderPubKey": "30f9d17cff6b8a182df541e86344516a774c450be73d0a05624a9db7748c74cf1",
-    "transactionDataHash": "0d15444314f0c1a617f4fff453b49506d4a687285987fde7a34f0b921f373e72",
-    "senderSignature": [
-    "264c48c479f1a6cabb18f731abd0986da68bdd789b1b2f6db26e8d6764e3fb20",
-    "cfa900a8f7a6d5499a58374eaab9cbfd876ccea83d9be0187e9aeb9e4a850e33"
-    ],
-    "minedInBlockIndex": 2,
-    "transferSuccessful": false
-    }
-    ],
-    "difficulty": 2,
-    "prevBlockHash": "012a7bb6ccb9121cd5d5e5db57c093e0854b066b17c19d5ad0f8dc7acdcec62a",
-    "minedBy": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
-    "blockDataHash": "c52e03f7f6218c4abece91021b3b1e1230e16423bc30f1f1eeccc15d099242fb",
-    "nonce": 32,
-    "dateCreated": "2022-03-22T20:02:02.479Z",
-    "blockHash": "003f7fbd795b823c03c38e72c1bd10df48a3816d88ea7c4b3669a28d2b63cd01"
-    }
+        {
+        "index": 0,
+        "transactions": [
+        {
+        "from": "0000000000000000000000000000000000000000",
+        "to": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
+        "value": 1000000000000,
+        "fee": 0,
+        "dateCreated": "2018-01-01T00:00:00.000Z",
+        "data": "genesis tx",
+        "senderPubKey": "00000000000000000000000000000000000000000000000000000000000000000",
+        "transactionDataHash": "8a684cb8491ee419e7d46a0fd2438cad82d1278c340b5d01974e7beb6b72ecc2",
+        "senderSignature": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "minedInBlockIndex": 0,
+        "transferSuccessful": true
+        }
+        ],
+        "difficulty": 0,
+        "minedBy": "0000000000000000000000000000000000000000",
+        "blockDataHash": "15cc5052fb3c307dd2bfc6bcaa057632250ee05104e4fb7cc75e59db1a92cefc",
+        "nonce": 0,
+        "dateCreated": "2018-01-01T00:00:00.000Z",
+        "blockHash": "c6da93eb4249cb5ff4f9da36e2a7f8d0d61999221ed6910180948153e71cc47f"
+        },
+        {
+        "index": 1,
+        "transactions": [
+        {
+        "from": "0000000000000000000000000000000000000000",
+        "to": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
+        "value": 5000020,
+        "fee": 0,
+        "dateCreated": "2022-03-22T20:02:02.465Z",
+        "data": "coinbase tx",
+        "senderPubKey": "00000000000000000000000000000000000000000000000000000000000000000",
+        "transactionDataHash": "529db6e02992d87a6109e8a7ffc963834bb2dfd5668648ea5d2b97f5dd11e43c",
+        "senderSignature": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "minedInBlockIndex": 1,
+        "transferSuccessful": true
+        },
+        {
+        "from": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
+        "to": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
+        "value": 500000,
+        "fee": 10,
+        "dateCreated": "2022-03-22T19:47:02.420Z",
+        "data": "Faucet -> Alice",
+        "senderPubKey": "8c4431db61e9095d5794ff53a3ae4171c766cadef015f2e11bec22b98a80f74a0",
+        "transactionDataHash": "4acf595427076604abe786e70ff01b97ffe85c64c62454b6698443cf8237c9ba",
+        "senderSignature": [
+        "c955ebbe7bd2081db8f34339ac5a68ad4486312220317825cbb5f1b99e2ca3ef",
+        "4bc86bff370b243e9a2e1c4a777061fcc7dfe6b4fd45d0f6bf95139a3581e206"
+        ],
+        "minedInBlockIndex": 1,
+        "transferSuccessful": true
+        },
+        {
+        "from": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
+        "to": "b3d72ad831b3e9cdbdaeda5ff4ae8e9cf182e548",
+        "value": 700000,
+        "fee": 10,
+        "dateCreated": "2022-03-22T19:48:42.430Z",
+        "data": "Faucet -> Bob",
+        "senderPubKey": "8c4431db61e9095d5794ff53a3ae4171c766cadef015f2e11bec22b98a80f74a0",
+        "transactionDataHash": "9df8b36532a9c321dd6b9742dc45554e73bb226ef8aa1c6354f33254eb042a6a",
+        "senderSignature": [
+        "694bc6ca80f6e77854511a3c150d83601ef217ed8d296ce9a04cb90a380860f5",
+        "d013f8081048a3f20826d8716b50d7e291121ebab75b77bd4ba743267dafea3c"
+        ],
+        "minedInBlockIndex": 1,
+        "transferSuccessful": true
+        }
+        ],
+        "difficulty": 1,
+        "prevBlockHash": "c6da93eb4249cb5ff4f9da36e2a7f8d0d61999221ed6910180948153e71cc47f",
+        "minedBy": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
+        "blockDataHash": "216291f6a079b52710de90539220120b6520d10984fea7f51d0fefd4df40a8a4",
+        "nonce": 12,
+        "dateCreated": "2022-03-22T20:02:02.466Z",
+        "blockHash": "012a7bb6ccb9121cd5d5e5db57c093e0854b066b17c19d5ad0f8dc7acdcec62a"
+        },
+        {
+        "index": 2,
+        "transactions": [
+        {
+        "from": "0000000000000000000000000000000000000000",
+        "to": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
+        "value": 5000040,
+        "fee": 0,
+        "dateCreated": "2022-03-22T20:02:02.479Z",
+        "data": "coinbase tx",
+        "senderPubKey": "00000000000000000000000000000000000000000000000000000000000000000",
+        "transactionDataHash": "9fd87f041429cd5d9b0b23b96292599972442a232cdeaf88f4f33f488d5bc764",
+        "senderSignature": [
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "minedInBlockIndex": 2,
+        "transferSuccessful": true
+        },
+        {
+        "from": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
+        "to": "b3d72ad831b3e9cdbdaeda5ff4ae8e9cf182e548",
+        "value": 400000,
+        "fee": 20,
+        "dateCreated": "2022-03-22T19:50:22.433Z",
+        "data": "Alice -> Bob",
+        "senderPubKey": "30f9d17cff6b8a182df541e86344516a774c450be73d0a05624a9db7748c74cf1",
+        "transactionDataHash": "bed2072abf303e33d6f64dd267d7f8ab3b9e522ea369abdae0607c0d20acfbea",
+        "senderSignature": [
+        "a615a1ad6b1b98ab245f512cc3eb80ee03a0c58430830c41dfa8f45189239200",
+        "2854cbf537144b48f9a911f121518ef91733f2e1bac3ac5eda84a0129446576a"
+        ],
+        "minedInBlockIndex": 2,
+        "transferSuccessful": true
+        },
+        {
+        "from": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
+        "to": "22e2864c613e4f778bb25ddb2b0022d1fbb11c8c",
+        "value": 400000,
+        "fee": 20,
+        "dateCreated": "2022-03-22T19:50:22.436Z",
+        "data": "Alice -> Peter (no funds)",
+        "senderPubKey": "30f9d17cff6b8a182df541e86344516a774c450be73d0a05624a9db7748c74cf1",
+        "transactionDataHash": "0d15444314f0c1a617f4fff453b49506d4a687285987fde7a34f0b921f373e72",
+        "senderSignature": [
+        "264c48c479f1a6cabb18f731abd0986da68bdd789b1b2f6db26e8d6764e3fb20",
+        "cfa900a8f7a6d5499a58374eaab9cbfd876ccea83d9be0187e9aeb9e4a850e33"
+        ],
+        "minedInBlockIndex": 2,
+        "transferSuccessful": false
+        }
+        ],
+        "difficulty": 2,
+        "prevBlockHash": "012a7bb6ccb9121cd5d5e5db57c093e0854b066b17c19d5ad0f8dc7acdcec62a",
+        "minedBy": "84ede81c58f5c490fc6e1a3035789eef897b5b35",
+        "blockDataHash": "c52e03f7f6218c4abece91021b3b1e1230e16423bc30f1f1eeccc15d099242fb",
+        "nonce": 32,
+        "dateCreated": "2022-03-22T20:02:02.479Z",
+        "blockHash": "003f7fbd795b823c03c38e72c1bd10df48a3816d88ea7c4b3669a28d2b63cd01"
+        }
     ],
     "pendingTransactions": [
-    {
-    "from": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
-    "to": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
-    "value": 400000,
-    "fee": 10,
-    "dateCreated": "2022-03-22T19:55:22.440Z",
-    "data": "Faucet -> Alice (again)",
-    "senderPubKey": "8c4431db61e9095d5794ff53a3ae4171c766cadef015f2e11bec22b98a80f74a0",
-    "transactionDataHash": "15217164aa8348f8be2bf02c074a4259d562e7547ecdd7a0bee0e07eae32030c",
-    "senderSignature": [
-    "b6ca21ceb392b9f8ea04e1a5ceb325bce974b85befaba0c0c2145ebe1dfcc6c",
-    "6bb9a1a341b8d69c697009c81c05029e668d120ace3dca6620fc3da2c299ec33"
-    ]
-    }
+        {
+        "from": "f3a1e69b6176052fcc4a3248f1c5a91dea308ca9",
+        "to": "a1de0763f26176c6d68cc77e0a1c2c42045f2314",
+        "value": 400000,
+        "fee": 10,
+        "dateCreated": "2022-03-22T19:55:22.440Z",
+        "data": "Faucet -> Alice (again)",
+        "senderPubKey": "8c4431db61e9095d5794ff53a3ae4171c766cadef015f2e11bec22b98a80f74a0",
+        "transactionDataHash": "15217164aa8348f8be2bf02c074a4259d562e7547ecdd7a0bee0e07eae32030c",
+        "senderSignature": [
+        "b6ca21ceb392b9f8ea04e1a5ceb325bce974b85befaba0c0c2145ebe1dfcc6c",
+        "6bb9a1a341b8d69c697009c81c05029e668d120ace3dca6620fc3da2c299ec33"
+        ]
+        }
     ],
     "currentDifficulty": 5,
     "miningJobs": {}
     },
     "chainId": "c6da93eb4249cb5ff4f9da36e2a7f8d0d61999221ed6910180948153e71cc47f"
-    },
+},
     "config": {
     "defaultServerHost": "localhost",
     "defaultServerPort": 5555,
@@ -230,4 +230,4 @@
     "b3d72ad831b3e9cdbdaeda5ff4ae8e9cf182e548": 1100000,
     "22e2864c613e4f778bb25ddb2b0022d1fbb11c8c": 0
     }
-    }
+}
