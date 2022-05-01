@@ -39,6 +39,19 @@ const MINT_PRIVATE_ADDRESS = process.env.MINT_PRIVATE_ADDRESS;
 const MINT_KEY_PAIR = ec.keyFromPrivate(MINT_PRIVATE_ADDRESS, 'hex');
 const MINT_PUBLIC_ADDRESS = MINT_KEY_PAIR.getPublic('hex');
 
+class Node {
+    constructor(nodeId, selfUrl, peers, chain, server){
+        this.nodeId = nodeId;
+        this.selfUrl = 'http://localhost:' + http_port;
+        this.peers = [];
+        this.chain = blockchain;
+        this.server = server;
+    }
+}
+
+const node = new Node();
+
+// console.log(node);
 
 
 
@@ -53,28 +66,28 @@ setInterval(() => {
     console.log('Terminator patrol\n\n', prevBlockTime + '\n');
 }, 10000)
 
-setTimeout(() => { // here is where we set the first message delays and mint the first block
-    let i = 2;
-    let amounts = 1;
+// setTimeout(() => { // here is where we set the first message delays and mint the first block
+//     let i = 2;
+//     let amounts = 1;
     
-    setTimeout(() => {
-        console.log(startCyberDyneChain.getChain()); // returns full chain 
-        // connectToPeers(startPeers) //need to uncomment 
-        setTimeout(() => {
-            // initHttpServer(server);
+//     setTimeout(() => {
+//         console.log(startCyberDyneChain.getChain()); // returns full chain 
+//         // connectToPeers(startPeers) //need to uncomment 
+//         setTimeout(() => {
+//             // initHttpServer(server);
             
-            setTimeout(() => {
-                // initP2PServer(); 
+//             setTimeout(() => {
+//                 // initP2PServer(); 
 
-                // const bobWallet = createWallet();
-                // const aliceWallet = createWallet();
-            }, 500); // 2000
+//                 // const bobWallet = createWallet();
+//                 // const aliceWallet = createWallet();
+//             }, 500); // 2000
 
-        }, 500); // 2000
+//         }, 500); // 2000
         
-    }, 500); // 5000
+//     }, 500); // 5000
 
-}, 500); // 20000
+// }, 500); // 20000
 
 // console.log(JSON.stringify(startCyberDyneChain, null, 15));
 
@@ -93,10 +106,16 @@ let initHttpServer = (server) => {
        pingTimeout: 180000, pingInterval: 25000
     })
 
+    node.server = 'http://localhost:' + http_port;
+    
+    let idAssign;
+
     io.on("connection", socket => {
         // console.log("client connected: ", socket.id);
         // console.log(blockchain);
         socket.join("data-room");
+        // node.nodeId = socket.id
+        // console.log(node);
         
         socket.on("disconnect", (reason) => {
            console.log(reason);
@@ -153,6 +172,7 @@ let initHttpServer = (server) => {
     }
 
     console.log("skynet running on port: ", http_port);
+    console.log(node);
    })
 }
 

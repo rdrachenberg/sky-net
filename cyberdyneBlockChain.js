@@ -154,9 +154,6 @@ class CyberDyneChain {
         this.pendingTransactions.push(transactionsSanatized); //* this is the mempool
         // console.log(' This is the pending Transactions array', this.pendingTransactions); 
         // console.log('PKEY HERE --->>', privateKey);
-        
-        
-        
         // this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')
           
     }
@@ -164,12 +161,12 @@ class CyberDyneChain {
     minePendingTransactions(miningRewardAddress) {
         
         let idHolder = this.getLastBlock().id + 1;
-
+        let prevHash = this.getLastBlock().blockHash;
         // console.log('PKEY HERE --->>', privateKey);
 
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
-            let terminator = new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair))
+            let terminator = new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair), prevHash, this.difficulty)
             
             const mine = () => {
                 return new Promise((resolve, reject) => {
@@ -184,9 +181,11 @@ class CyberDyneChain {
             }
 
             mine().then((res) => {
-                let {blockHash, nonce} = res;
+                let {blockHash, nonce, prevHash} = res;
                 terminator.blockHash = blockHash
                 terminator.nonce = nonce 
+                terminator.prevHash = prevHash
+                console.log(terminator);
                 this.addBlock(terminator);
             })
             

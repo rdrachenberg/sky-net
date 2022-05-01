@@ -49,7 +49,7 @@ class Terminator {
         }
 
         console.log('Skynet mined another Terminator: #', this.nonce + '\n' + this.blockHash); 
-        const infoNeeded = {blockHash:this.blockHash, nonce: this.nonce}
+        const infoNeeded = {blockHash:this.blockHash, nonce: this.nonce, prevHash: this.prevHash}
         return infoNeeded;
     }
 }
