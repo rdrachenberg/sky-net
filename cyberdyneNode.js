@@ -66,37 +66,7 @@ setInterval(() => {
     console.log('Terminator patrol\n\n', prevBlockTime + '\n');
 }, 10000)
 
-// setTimeout(() => { // here is where we set the first message delays and mint the first block
-//     let i = 2;
-//     let amounts = 1;
-    
-//     setTimeout(() => {
-//         console.log(startCyberDyneChain.getChain()); // returns full chain 
-//         // connectToPeers(startPeers) //need to uncomment 
-//         setTimeout(() => {
-//             // initHttpServer(server);
-            
-//             setTimeout(() => {
-//                 // initP2PServer(); 
 
-//                 // const bobWallet = createWallet();
-//                 // const aliceWallet = createWallet();
-//             }, 500); // 2000
-
-//         }, 500); // 2000
-        
-//     }, 500); // 5000
-
-// }, 500); // 20000
-
-// console.log(JSON.stringify(startCyberDyneChain, null, 15));
-
-
-
-
-
-
-// let addOneBlock = startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
 
 let initHttpServer = (server) => {
    const io = socketIo(server, {
@@ -104,7 +74,7 @@ let initHttpServer = (server) => {
            origin: 'http://localhost:3000'
        },
        pingTimeout: 180000, pingInterval: 25000
-    })
+    }, [])
 
     node.server = 'http://localhost:' + http_port;
     
@@ -114,8 +84,8 @@ let initHttpServer = (server) => {
         // console.log("client connected: ", socket.id);
         // console.log(blockchain);
         socket.join("data-room");
-        // node.nodeId = socket.id
-        // console.log(node);
+        node.nodeId = socket.id
+        console.log(node);
         
         socket.on("disconnect", (reason) => {
            console.log(reason);
@@ -160,7 +130,7 @@ let initHttpServer = (server) => {
 
             socket.emit('sendbalance', balance);
         })
-    })
+    }, [])
     
     setInterval(() => {
         io.to("data-room").emit("data", JSON.stringify(blockchain));
@@ -177,4 +147,31 @@ let initHttpServer = (server) => {
 }
 
 initHttpServer(server);
+// console.log(node);
 
+// setTimeout(() => { // here is where we set the first message delays and mint the first block
+//     let i = 2;
+//     let amounts = 1;
+    
+//     setTimeout(() => {
+//         console.log(startCyberDyneChain.getChain()); // returns full chain 
+//         // connectToPeers(startPeers) //need to uncomment 
+//         setTimeout(() => {
+//             // initHttpServer(server);
+            
+//             setTimeout(() => {
+//                 // initP2PServer(); 
+
+//                 // const bobWallet = createWallet();
+//                 // const aliceWallet = createWallet();
+//             }, 500); // 2000
+
+//         }, 500); // 2000
+        
+//     }, 500); // 5000
+
+// }, 500); // 20000
+
+// console.log(JSON.stringify(startCyberDyneChain, null, 15));
+
+// let addOneBlock = startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));

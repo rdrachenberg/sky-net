@@ -17,29 +17,11 @@ const ec = new Elliptic.ec('secp256k1');
 const keccak256 = require('js-sha3').keccak256;
 
 const MINT_PRIVATE_KEY = process.env.MINT_PRIVATE_ADDRESS
-const MINT_PUBLIC_ADDRESS = process.env.MINT_PUBLIC_ADDRESS;
-const MINT_KEY_PAIR = ec.keyFromPrivate( MINT_PRIVATE_KEY,'hex');
+const { addressGenerator } = require('./addressGenerator');
 
 let keyPair;
 
-const generatorPoint = MINT_KEY_PAIR.ec.g; // sep256k1 generator point generation
-    const pubKeyCoordinates = generatorPoint.mul(MINT_PRIVATE_KEY);
-
-    const x = pubKeyCoordinates.getX().toString('hex');
-    const y = pubKeyCoordinates.getY().toString('hex');
-
-    const concatPublicKey = x + y;
-
-    // console.log('concat is here ---> ', concatPublicKey)
-    const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
-
-    console.log('here is the hash of the Public Key: ',hashOfPublicKey);
-
-    const ethAddressBuffer = Buffer.from(hashOfPublicKey);
-
-    const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
-
-    const address = '0x'+ addressBuffer;
+let address = addressGenerator(MINT_PRIVATE_KEY);
 
 class CyberDyneChain {
     constructor() {
@@ -80,8 +62,6 @@ class CyberDyneChain {
         this.initMessages();
         let firstHash = this.createHash('starting T1 Models');
         // console.log(firstHash);
-        // new Terminator(i, date, {sender: `JoMama${i}`, receiver: "Ryan of course", amount: amounts}));
-        // {sender: 'Dev', receiver: 'Cyberdyne Systems', amount: 1}
         return new Terminator(1, new Date(Date.now()), new Transaction('0000000000000000000000000000000000000000', address, 10000000, 0, 'Genisis transaction'), firstHash);
     }
     
