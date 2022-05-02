@@ -29,7 +29,7 @@ function addressGenerator(privateKey) {
 
     const address = '0x'+ addressBuffer;
 
-    // console.log('HERE IS YOUR FORMATTED ADDRESS', address);
+    console.log('HERE IS YOUR FORMATTED ADDRESS', address);
 
     return address;
 }

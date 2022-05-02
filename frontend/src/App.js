@@ -22,6 +22,7 @@ const App = () => {
   const [keyPair, setKeyPair] = useState([]);
   const [keyPairData, setKeyPairData] = useState(false)
   const [balance, setBalance] =useState([])
+  const [balanceTransfer, setBalanceTransfer] = useState(false);
 
   const [toggle, setToggle] = useState(false);
   const [showLoadingImg, setShowLoadingImg] = useState(true);
@@ -32,6 +33,8 @@ const App = () => {
 
   const inputAccount = useRef();
   const inputPrivateKey = useRef();
+
+  const inputCoinRequest = useRef();
 
   const handleLastClick = () => {
    
@@ -102,6 +105,17 @@ const App = () => {
     const address = inputAccount.current.value;
     socket.current.emit('balance', address);
   }
+  const handleRequestCoinClick = (e) => {
+    e.preventDefault();
+    const address = inputCoinRequest.current.value;
+    socket.current.emit('requestcoin', address);
+  }
+
+  const handleToggleImg = (e) => {
+    e.preventDefault();
+    
+    setShowLoadingImg(!showLoadingImg);
+  }
 
   const handleCopyPublicKey = (e) => {
     e.preventDefault();
@@ -164,6 +178,16 @@ const App = () => {
       setBalance(balance)
       console.log('here is the balance ---> ',balance)
     })
+    
+    socket.current.on('sendcoin', (balance) => {
+      setBalance(balance)
+      setBalanceTransfer(true);
+      console.log('here is the balance ---> ',balance)
+    })
+
+    // socket.current.on('showloading', () => {
+      
+    // })
 
     socket.current.on('connect_error', () => {
       setTimeout(() => {
@@ -174,10 +198,6 @@ const App = () => {
       setMessages('server disconnected!')
       console.log('server is disconnected! *')
     })
-
-    setTimeout(() => {
-      setShowLoadingImg(false);
-    }, 5000);
 
     return () => {
       socket.current.disconnect(false);
@@ -191,9 +211,23 @@ const App = () => {
         <div className='text-center'>
         <MDBRow>
           <div className='interact-header'>
-            <h2>
-           CyberDyne Systems Terminator Chain
-            </h2>
+            
+            {showLoadingImg ? <h2 onClick={handleToggleImg}>CyberDyne Systems Terminator Chain</h2>
+            :
+            <div id='hidden-robot'>
+            <MDBCol>
+              <h2 onClick={handleToggleImg}>CyberDyne Systems Terminator Chain 
+              <b/>   
+                  
+              </h2>
+              <img src='https://www.simpleimageresizer.com/_uploads/photos/fdc87cdb/terminator-153160_960_720_2_10.png' onClick={handleToggleImg}/>
+              </MDBCol>
+              
+              
+            </div> 
+            }
+           
+            
             <div id='button-div' className='d-flex align-items-start mb-3'>
               <MDBCol>
                 <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
@@ -217,6 +251,7 @@ const App = () => {
             className='mb-4'
             src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
             style={{ flex: 1, width: 250, height: 400, resizeMode: 'contain' }}
+            onClick={handleToggleImg}
           />
           <h3>Welcome to the Revolution</h3>
           </div>
@@ -266,12 +301,8 @@ const App = () => {
         
       
       :
-      <></>
-        
-      
+      <></>  
     }
-      
-      
       <MDBRow>
           <div className='interact'>
             <div id='button-div' className='d-flex align-items-start mb-3'>
@@ -386,7 +417,10 @@ const App = () => {
           </form>
         </MDBCol>
         <MDBCol>
+        <MDBCard className='key-card'>
+          <MDBCardImage src='https://cdn.pixabay.com/photo/2019/11/09/06/00/question-4612922_960_720.jpg' alt='...' position='top' />
         <form className='balance-card'>
+
             <p className="h4 text-center mb-4">Get balance</p>
             
             <label htmlFor="address" className="grey-text">
@@ -413,8 +447,45 @@ const App = () => {
             </div>
             
           </form>
-              
+        </MDBCard>
         </MDBCol>
+        <MDBCol>
+        <MDBCard className='key-card'>
+          <MDBCardImage src='https://cdn.pixabay.com/photo/2018/10/15/22/11/blockchain-3750157_960_720.jpg' alt='...' position='top' />
+        <form className='balance-card'>
+            <p className="h4 text-center mb-4">Request 1 Coin</p>
+            
+            <label htmlFor="address" className="grey-text">
+              Your Address
+            </label>
+            <input
+              ref={inputCoinRequest}
+              type="text"
+              id="address"
+              className="form-control"
+            />
+            <br />
+            <div className='faucet'>
+              <MDBCardText>
+               {balanceTransfer? <>Done:  ✅</>: <>Click below to request</>}
+              </MDBCardText>
+            </div>
+            <div className="text-center mt-4">
+              <MDBBtn color="warning" type="submit" onClick={handleRequestCoinClick}>
+                Request Token
+                <b/>
+                <MDBIcon far icon="paper-plane" className="ml-2" />
+              </MDBBtn>
+            </div>
+            
+          </form>
+        </MDBCard>
+        </MDBCol>
+      </MDBRow>
+      <MDBRow>
+      <MDBCol></MDBCol>
+        <MDBCol></MDBCol>
+        <MDBCol></MDBCol>
       </MDBRow>
       </div>
         </div>

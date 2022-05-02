@@ -13,7 +13,11 @@ const socketIo = require('socket.io');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const path = require('path');
+const {v4: uuidv4} = require('uuid');
 const {generateKeys} = require('./keygen.js');
+const { addressGenerator } = require('./addressGenerator');
+
 
 const startCyberDyneChain = new CyberDyneChain();
 
@@ -49,7 +53,7 @@ class Node {
     }
 }
 
-const node = new Node();
+const node = new Node(uuidv4());
 
 // console.log(node);
 
@@ -69,12 +73,14 @@ setInterval(() => {
 
 
 let initHttpServer = (server) => {
+
+    app.use(express.static(path.join(__dirname, 'public')));
    const io = socketIo(server, {
        cors: {
            origin: 'http://localhost:3000'
        },
        pingTimeout: 180000, pingInterval: 25000
-    }, [])
+    })
 
     node.server = 'http://localhost:' + http_port;
     
@@ -84,8 +90,8 @@ let initHttpServer = (server) => {
         // console.log("client connected: ", socket.id);
         // console.log(blockchain);
         socket.join("data-room");
-        node.nodeId = socket.id
-        console.log(node);
+        // node.nodeId = socket.id
+        // console.log(node);
         
         socket.on("disconnect", (reason) => {
            console.log(reason);
@@ -93,12 +99,7 @@ let initHttpServer = (server) => {
 
         socket.on("add-block", async () => {
             startCyberDyneChain.minePendingTransactions(publicKey)
-            // let from = null;
-            // let to = null;
-            // let value = null;
-            // idHolder = startCyberDyneChain.getLastBlock().id + 1;
-            // startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, new Date(Date.now()), 5, 'manual block added')));
-            // io.to("data-room").emit("data", JSON.stringify(blockchain));
+        
         })
 
         socket.on('transaction', (transaction) => {
@@ -106,8 +107,6 @@ let initHttpServer = (server) => {
             const numAmount = Number(amount);
 
             idHolder = startCyberDyneChain.getLastBlock().id + 1;
-            
-            
             
             if(from != '' && to != '' && numAmount != NaN && data != 'Genisis transaction' ){
                 startCyberDyneChain.addTransaction(transaction)
@@ -130,7 +129,24 @@ let initHttpServer = (server) => {
 
             socket.emit('sendbalance', balance);
         })
-    }, [])
+
+        socket.on('requestcoin', (address) => {
+            const from = addressGenerator(MINT_PRIVATE_ADDRESS);
+            const to = address;
+            const amount = 1;
+            const privateKey = MINT_PRIVATE_ADDRESS
+            const transaction = {from, to, amount, privateKey};
+
+            console.log(transaction)
+
+            startCyberDyneChain.addTransaction(transaction);
+            startCyberDyneChain.minePendingTransactions(publicKey)
+
+            balance = startCyberDyneChain.getBalanceOfAddress(address)
+            // io.to("data-room").emit("data", JSON.stringify(blockchain));
+            socket.emit('sendcoin', balance)
+        })
+    })
     
     setInterval(() => {
         io.to("data-room").emit("data", JSON.stringify(blockchain));
@@ -175,3 +191,10 @@ initHttpServer(server);
 // console.log(JSON.stringify(startCyberDyneChain, null, 15));
 
 // let addOneBlock = startCyberDyneChain.addBlock(new Terminator(idHolder, Date.now(), {sender: `JoMama${idHolder}`, receiver: "Ryan of course", amount: 5}));
+
+    // let from = null;
+            // let to = null;
+            // let value = null;
+            // idHolder = startCyberDyneChain.getLastBlock().id + 1;
+            // startCyberDyneChain.addBlock(new Terminator(idHolder, new Date(Date.now()), new Transaction(from, to, value, new Date(Date.now()), 5, 'manual block added')));
+            // io.to("data-room").emit("data", JSON.stringify(blockchain));

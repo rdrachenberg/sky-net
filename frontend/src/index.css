@@ -20,13 +20,14 @@ code {
 .balance-card {
   position: relative;
   height: auto;
+  min-height: 100%;
   width: auto;
   display: block;
   background: linear-gradient(0deg, black, #444444);
   border-radius: 10px;
   color: white;
   padding: 25px;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 #button-div {
@@ -95,6 +96,7 @@ code {
 .key-card {
   position: relative;
   height: auto;
+  min-height: 100%;
   width: auto;
   max-width: 450px;
   display: block;
@@ -113,6 +115,7 @@ code {
 .submit-card {
   position: relative;
   height: auto;
+  min-height: 100%;
   width: auto;
   display: block;
   background: linear-gradient(0deg, black, #444444);
