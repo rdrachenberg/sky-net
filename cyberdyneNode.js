@@ -17,6 +17,7 @@ const path = require('path');
 const {v4: uuidv4} = require('uuid');
 const {generateKeys} = require('./keygen.js');
 const { addressGenerator } = require('./addressGenerator');
+const { time } = require('console');
 
 
 const startCyberDyneChain = new CyberDyneChain();
@@ -32,6 +33,8 @@ let blockchain = startCyberDyneChain.getChain();
 let last = startCyberDyneChain.getLastBlock();
 
 let idHolder = last.id + 1;
+
+let faucetRequestAddress = [];
 
 const privateKey = process.env.NODE_PRIVATE_KEY || ec.genKeyPair().getPrivate('hex');
 const keyPair = ec.keyFromPrivate(privateKey, 'hex');
@@ -131,20 +134,51 @@ let initHttpServer = (server) => {
         })
 
         socket.on('requestcoin', (address) => {
+            const timeCheck = new Date(Date.now());
             const from = addressGenerator(MINT_PRIVATE_ADDRESS);
             const to = address;
             const amount = 1;
             const privateKey = MINT_PRIVATE_ADDRESS
             const transaction = {from, to, amount, privateKey};
 
-            console.log(transaction)
+            
+
+            for(i=0; i < faucetRequestAddress.length; i++) {
+                if(faucetRequestAddress[i] === address){
+                    if(faucetRequestAddress[i+1] <= (timeCheck - 60000)) 
+                    {
+
+                        startCyberDyneChain.addTransaction(transaction);
+                        startCyberDyneChain.minePendingTransactions(publicKey)
+            
+                        balance = startCyberDyneChain.getBalanceOfAddress(address)
+                        // io.to("data-room").emit("data", JSON.stringify(blockchain));
+                        socket.emit('sendcoin', balance)
+                        
+                        return;
+                    } else {
+                        let message = 'You have to wait 1 hour\n to get more faucet coin'
+                        socket.emit('requestmessage', message)
+                        console.log('sorry sucker; you already requested this hour');
+                        return 
+                    }   
+                }
+            }
+
+            console.log(faucetRequestAddress);
+            faucetRequestAddress.push(to,new Date(Date.now()));
 
             startCyberDyneChain.addTransaction(transaction);
             startCyberDyneChain.minePendingTransactions(publicKey)
 
             balance = startCyberDyneChain.getBalanceOfAddress(address)
             // io.to("data-room").emit("data", JSON.stringify(blockchain));
+            socket.emit('requestmessage', '');
             socket.emit('sendcoin', balance)
+
+            // console.log(transaction)
+
+           
         })
     })
     

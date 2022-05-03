@@ -13,7 +13,7 @@ const App = () => {
   const [data, setData] = useState([]);
   const [working, setWorking] = useState(false);
 
-  const [messages, setMessages] = useState(['this is here']);
+  const [messages, setMessages] = useState(false);
   const [latest, setLatest] = useState([]);
 
   const [transaction, setTransaction] = useState('');
@@ -141,7 +141,7 @@ const App = () => {
     })
 
     socket.current.on('data', (data) => {
-      setMessages('This is here')
+      // setMessages('This is here')
       data = JSON.parse(data);
 
       setFullChain(data)
@@ -183,6 +183,11 @@ const App = () => {
       setBalance(balance)
       setBalanceTransfer(true);
       console.log('here is the balance ---> ',balance)
+    })
+
+    socket.current.on('requestmessage', (message) => {
+      console.log(message);
+      setMessages(message);
     })
 
     // socket.current.on('showloading', () => {
@@ -294,8 +299,12 @@ const App = () => {
       
       {toggle? 
         <div>
-        
-        <Modal />
+        {data.map((item) => {
+          return (
+            <Modal data={item} />
+          )
+        })}
+       
         </div>
          
         
@@ -466,9 +475,13 @@ const App = () => {
             />
             <br />
             <div className='faucet'>
+              
+              {messages? <MDBCardText>{messages}</MDBCardText>
+              : 
               <MDBCardText>
-               {balanceTransfer? <>Done:  ✅</>: <>Click below to request</>}
-              </MDBCardText>
+              {balanceTransfer? <>Done:  ✅</>: <>Click below to request</>}
+              </MDBCardText>}
+             
             </div>
             <div className="text-center mt-4">
               <MDBBtn color="warning" type="submit" onClick={handleRequestCoinClick}>
