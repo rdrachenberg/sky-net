@@ -78,6 +78,9 @@ setInterval(() => {
 let initHttpServer = (server) => {
 
     app.use(express.static(path.join(__dirname, 'public')));
+
+   
+
    const io = socketIo(server, {
        cors: {
            origin: 'http://localhost:3000'
@@ -86,6 +89,8 @@ let initHttpServer = (server) => {
     })
 
     node.server = 'http://localhost:' + http_port;
+
+    app.set('socketio', io);
     
     let idAssign;
 
@@ -181,6 +186,8 @@ let initHttpServer = (server) => {
            
         })
     })
+
+    
     
     setInterval(() => {
         io.to("data-room").emit("data", JSON.stringify(blockchain));

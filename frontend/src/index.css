@@ -99,7 +99,7 @@ code {
   height: auto;
   min-height: 100%;
   width: auto;
-  max-width: 450px;
+  max-width: 300px;
   display: block;
   background: linear-gradient(0deg, black, #444444);
   border-radius: 10px;

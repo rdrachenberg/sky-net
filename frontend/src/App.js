@@ -431,7 +431,7 @@ const App = () => {
         </MDBCol>
         <MDBCol>
         <MDBCard className='key-card'>
-          <MDBCardImage src='https://cdn.pixabay.com/photo/2019/11/09/06/00/question-4612922_960_720.jpg' alt='...' position='top' />
+          <MDBCardImage src='https://cdn.pixabay.com/photo/2019/11/09/06/00/question-4612922_960_720.jpg' alt='...' position='bottom' />
         <form className='balance-card'>
 
             <p className="h4 text-center mb-4">Get balance</p>
@@ -464,7 +464,7 @@ const App = () => {
         </MDBCol>
         <MDBCol>
         <MDBCard className='key-card'>
-          <MDBCardImage src='https://cdn.pixabay.com/photo/2018/10/15/22/11/blockchain-3750157_960_720.jpg' alt='...' position='top' />
+          <MDBCardImage src='https://cloudfront-us-east-1.images.arcpublishing.com/coindesk/3RA7OPCYCVGZBCE22HNF6CZXZY.jpg' alt='...' position='top' />
         <form className='balance-card'>
             <p className="h4 text-center mb-4">Request 1 Coin</p>
             
