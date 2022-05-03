@@ -26,6 +26,7 @@ const App = () => {
 
   const [toggle, setToggle] = useState(false);
   const [showLoadingImg, setShowLoadingImg] = useState(true);
+  const [modelNum, setModelNum] = useState(-1);
   
   const inputTo = useRef();
   const inputFrom = useRef();
@@ -130,6 +131,8 @@ const App = () => {
   const handleModal = (e) => {
     e.preventDefault();
     setToggle(!toggle);
+    console.log(e.currentTarget.getAttribute('id'));
+    setModelNum(e.currentTarget.getAttribute('id'))
     console.log(toggle);
   }
 
@@ -281,7 +284,7 @@ const App = () => {
               const { id, timestamp, nonce, blockHash, prevHash, data} = item;
               const {from, to, value} = data;
               return (
-                <tr key = {id} onClick={handleModal}>
+                <tr key = {id} onClick={handleModal} id={id}>
                   <td>{id}</td>
                   <td>{nonce}</td>
                   <td>{timestamp}</td>
@@ -300,15 +303,16 @@ const App = () => {
       {toggle? 
         <div>
         {data.map((item) => {
+          console.log(item)
+          let tmp = item;
+          console.log(modelNum)
           return (
-            <Modal data={item} />
+            
+            <Modal data={tmp} />
           )
         })}
        
         </div>
-         
-        
-      
       :
       <></>  
     }
