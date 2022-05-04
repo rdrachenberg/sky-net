@@ -39,7 +39,7 @@ export default function Modal(props) {
           <MDBModalHeader>
             <MDBModalTitle>Cyberdyne Systems Terminator Block</MDBModalTitle>
             
-            <MDBCardText style={{paddingLeft: '5%'}}><img src={'https://www.simpleimageresizer.com/_uploads/photos/fdc87cdb/terminator-153160_960_720_2_10.png'}></img></MDBCardText>
+            <MDBCardText style={{paddingLeft: '5%'}}><img style={{maxWidth: '55px', maxHeight:'10%'}} src={'https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'}></img></MDBCardText>
             <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
           </MDBModalHeader>
           <MDBModalBody key={props.timestamp} style={{textAlign: 'left', fontWeight: 'bolder'}}>

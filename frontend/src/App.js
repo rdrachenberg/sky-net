@@ -228,7 +228,7 @@ const App = () => {
               <b/>   
                   
               </h2>
-              <img src='https://www.simpleimageresizer.com/_uploads/photos/fdc87cdb/terminator-153160_960_720_2_10.png' onClick={handleToggleImg}/>
+              <img style={{maxWidth: '40px'}} src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png' onClick={handleToggleImg}/>
               </MDBCol>
               
               
@@ -276,7 +276,6 @@ const App = () => {
               <th scope='col'>Sender</th>
               <th scope='col'>Receiver</th>
               <th scope='col'>Amount</th>
-
             </tr>
           </MDBTableHead>
           <tbody>
