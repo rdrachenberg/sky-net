@@ -98,26 +98,12 @@ class CyberDyneChain {
         keyPair = ec.keyFromPrivate(privateKey, 'hex');
         
         const publicKey = keyPair.getPublic('hex');
+        const privKey = keyPair.getPrivate('hex')
+
+        const address = addressGenerator(privKey);
+
         const fromBalance = this.getBalanceOfAddress(from);
 
-        const generatorPoint = keyPair.ec.g; // sep256k1 generator point generation
-        const pubKeyCoordinates = generatorPoint.mul(privateKey);
-
-        const x = pubKeyCoordinates.getX().toString('hex');
-        const y = pubKeyCoordinates.getY().toString('hex');
-
-        const concatPublicKey = x + y;
-
-        // console.log('concat is here ---> ', concatPublicKey)
-        const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
-
-        console.log('here is the hash of the Public Key: ',hashOfPublicKey);
-
-        const ethAddressBuffer = Buffer.from(hashOfPublicKey);
-
-        const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
-
-        const address = '0x'+ addressBuffer;
         // console.log('here is the address var --> ', address + '\n')
         // console.log('here is the from var --> ', from)
         if(address !== from) {
@@ -134,8 +120,7 @@ class CyberDyneChain {
         this.pendingTransactions.push(transactionsSanatized); //* this is the mempool
         // console.log(' This is the pending Transactions array', this.pendingTransactions); 
         // console.log('PKEY HERE --->>', privateKey);
-        // this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')
-          
+        // this.minePendingTransactions('048bf0d1cf1d8abfb51dd2772c51118b62092bf167f98c3a66bf424b1b615801e2eac4ba8f764201c8727da2feb03c46cdd182a72347c161336b13be9bb054e774')   
     }
 
     minePendingTransactions(miningRewardAddress) {
