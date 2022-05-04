@@ -8,6 +8,8 @@ const keccak256 = require('js-sha3').keccak256;
 // const MINT_KEY_PAIR = ec.keyFromPrivate(MINT_PRIVATE_KEY, 'hex');
 let address;
 
+const { addressGenerator } = require('./addressGenerator');
+
 class Transaction { // define and export class with a constructor 
     constructor(from, to, value, fee, dateCreated, data) { // when class is initiated, it will take in from address, to address, and value
         this.from = from; // make this.from equal to the passed in value of from
@@ -48,33 +50,16 @@ class Transaction { // define and export class with a constructor
         }
     }
 
-    signTransaction(signingKey) { // define a class function to sign the transaction. Will take as a parameter a signingKey
-        
+    signTransaction(signingKey) { // define a class function to sign the transaction. Will take as a parameter a privateKey
         // console.log('here is the signing key -->\n ', signingKey)
         // console.log('Here is the this.data --->>>> \n')
+        
             
             let passedInPKey = ec.keyFromPrivate(signingKey, 'hex');
 
             const privateKey = passedInPKey.getPrivate('hex');
-
-            const generatorPoint = passedInPKey.ec.g; // sep256k1 generator point generation
-            const pubKeyCoordinates = generatorPoint.mul(privateKey);
-
-            const x = pubKeyCoordinates.getX().toString('hex');
-            const y = pubKeyCoordinates.getY().toString('hex');
-
-            const concatPublicKey = x + y;
-
-            // console.log('concat is here ---> ', concatPublicKey)
-            const hashOfPublicKey = keccak256(Buffer.from(concatPublicKey, 'hex'))
-
-            console.log('here is the hash of the Public Key: ',hashOfPublicKey);
-
-            const ethAddressBuffer = Buffer.from(hashOfPublicKey);
-
-            const addressBuffer = ethAddressBuffer.slice(-20).toString('hex');
-
-            address = '0x'+ addressBuffer;
+            
+            address = addressGenerator(privateKey)
 
             console.log('address transactions', address);
             console.log('this.from transactions', this.from);

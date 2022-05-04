@@ -8,7 +8,7 @@ let keyPair;
 function addressGenerator(privateKey) {
 
     keyPair = ec.keyFromPrivate(privateKey, 'hex');
-
+    // console.log(keyPair)
     const generatorPoint = keyPair.ec.g; // sep256k1 generator point generation
         const pubKeyCoordinates = generatorPoint.mul(privateKey);
     // console.log(pubKeyCoordinates);
