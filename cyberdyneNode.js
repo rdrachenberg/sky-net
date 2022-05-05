@@ -6,6 +6,7 @@ const { fork } = require('child_process');
 const Terminator = require('./block');
 const Transaction = require('./transactions');
 const CyberDyneChain = require('./cyberdyneBlockChain.js');
+const About = require('./cyberdyneAbout')
 
 // Require Express and socketio for hybrid server setup
 const express = require('express');
@@ -57,10 +58,9 @@ class Node {
 }
 
 const node = new Node(uuidv4());
-
+const about = new About(node.nodeId, 20713, node.selfUrl, node.peers, startCyberDyneChain.difficulty, startCyberDyneChain.getLastBlock().id, startCyberDyneChain.pendingTransactions)
 // console.log(node);
-
-
+// console.log(about);
 
 setInterval(() => {
     let prevBlockTime = startCyberDyneChain.getLastBlock().timestamp;
@@ -78,8 +78,6 @@ setInterval(() => {
 let initHttpServer = (server) => {
 
     app.use(express.static(path.join(__dirname, 'public')));
-
-   
 
    const io = socketIo(server, {
        cors: {
@@ -142,6 +140,12 @@ let initHttpServer = (server) => {
             console.log(node);
 
             socket.emit('debug', JSON.stringify(node) + '\n');
+        })
+
+        socket.on('aboutrequest', () => {
+            console.log(about);
+            socket.emit('about', JSON.stringify(about) + '\n');
+            
         })
 
         socket.on('requestcoin', (address) => {

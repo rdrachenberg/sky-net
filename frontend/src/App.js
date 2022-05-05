@@ -144,6 +144,13 @@ const App = () => {
     console.log(toggle);
   }
 
+  const handleAboutRequest = (e) => {
+    e.preventDefault();
+    console.log('the handle About Request Button was Click -->> ');
+
+    socket.current.emit('aboutrequest');
+  }
+
   useEffect(() => {
     socket.current = io('ws://localhost:8000');
 
@@ -194,6 +201,12 @@ const App = () => {
       setinteractMessages(node)
     })
 
+    socket.current.on('about', (about) => {
+      console.log('Here is the Abmout var --->>>>',about);
+      
+      setinteractMessages(about)
+    })
+
     socket.current.on('showtable', () => {
       setShowTable(true);
     })
@@ -202,10 +215,6 @@ const App = () => {
       console.log(message);
       setMessages(message);
     })
-
-    // socket.current.on('showloading', () => {
-      
-    // })
 
     socket.current.on('connect_error', () => {
       setTimeout(() => {
@@ -356,7 +365,10 @@ const App = () => {
                 <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
               </MDBCol>
               <MDBCol>
-                <MDBBtn tag='a' outline color='info' role='button' onClick={handleDebugReqeust}>Debug</MDBBtn>
+                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleDebugReqeust}>Debug</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='info' role='button' onClick={handleAboutRequest}>About</MDBBtn>
               </MDBCol>
               
             </div>
