@@ -281,7 +281,11 @@ const App = () => {
           <tbody>
             {data.map((item) => {
               const { id, timestamp, nonce, blockHash, prevHash, data} = item;
-              const {from, to, value} = data;
+              {/* let tmpData = {...data[0]}
+              const {from, to, value} = tmpData; */}
+            
+              
+            const {from, to, value} = data;
               return (
                 <tr key = {id} onClick={handleModal} id={id}>
                   <td>{id}</td>

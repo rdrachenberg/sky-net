@@ -11,7 +11,7 @@ let address;
 const { addressGenerator } = require('./addressGenerator');
 
 class Transaction { // define and export class with a constructor 
-    constructor(from, to, value, fee, dateCreated, data) { // when class is initiated, it will take in from address, to address, and value
+    constructor(from, to, value, fee, dateCreated, data, index) { // when class is initiated, it will take in from address, to address, and value
         this.from = from; // make this.from equal to the passed in value of from
         this.to = to; // make this.to equal to the passed in value of to
         this.value = value; // make this.value equal to the passed in value of value
@@ -21,6 +21,7 @@ class Transaction { // define and export class with a constructor
         this.senderPubKey = '';
         this.transactionDataHash = this.makeHash();
         this.senderSignature = [this.mintTransactionSignature(this.data)];
+        this.index = index
     }
 
     makeHash() {

@@ -129,40 +129,56 @@ class CyberDyneChain {
         let prevHash = this.getLastBlock().blockHash;
         // console.log('PKEY HERE --->>', privateKey);
 
+        let terminator = new Terminator(idHolder, new Date(Date.now()), [], prevHash, this.difficulty);
+
+        // console.log(terminatorOne);
+
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
-            let terminator = new Terminator(idHolder, new Date(Date.now()), new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair), prevHash, this.difficulty)
             
-            const mine = () => {
-                return new Promise((resolve, reject) => {
-                    const error = false;
-                    if (!error) {
-                        resolve(terminator.mineBlock(this.difficulty));
-                        // this.addBlock(terminator);
-                    } else {
-                        reject('Something went incredibly wrong! lol')
-                    }  
-                })
-            }
+            terminator.data.push(new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair), i);
+            // terminator.data = Object.assign({i: new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair, this.transactionIndex = i)}, terminator.data);
+            
+        
+        }
+        let temp = {...terminator.data}
+        terminator.data = {...terminator.data[0]}
 
-            mine().then((res) => {
-                let {blockHash, nonce, prevHash} = res;
-                terminator.blockHash = blockHash
-                terminator.nonce = nonce 
-                terminator.prevHash = prevHash
-                console.log(terminator);
-                this.addBlock(terminator);
+        for (const t in temp) {
+            console.log('\n')
+            console.log(t);
+            console.log(temp[t])
+            // terminator.data = temp[t];
+            console.log('^^^^^^^ TTHIS IS HERE ^^^^^^^^')
+        }
+        
+        const mine = () => {
+            return new Promise((resolve, reject) => {
+                const error = false;
+                if (!error) {
+                    resolve(terminator.mineBlock(this.difficulty));
+                    // this.addBlock(terminator);
+                } else {
+                    reject('Something went incredibly wrong! lol')
+                }  
             })
-            
-            idHolder++;
         }
 
-        this.pendingTransactions = [];
-        
-        
+        mine().then((res) => {
+            let {blockHash, nonce, prevHash} = res;
 
-        // this.getBalanceOfAddress(to);
-        // block.mineBlock(this.difficulty);
+            terminator.blockHash = blockHash
+            terminator.nonce = nonce 
+            
+            terminator.prevHash = prevHash
+            // terminator.data = {...terminator.data[0]}; //! I think HERE IS THE ISSUE. COMING IN AS ARRAY. CONVERTING TO OBJECT      
+            console.log('terminator.DATA here --->>>>>>', terminator.data);
+            console.log(terminator);
+            this.addBlock(terminator);
+        })
+
+        idHolder++;
+        this.pendingTransactions = [];
 
         console.log('New Terminator mined! Skynet is growing!');
     
@@ -392,4 +408,30 @@ var queryChainLengthMsg = () => ({'type': MessageType.QUERY_LATEST});
 // connectToPeers(startPeers)
 // initHttpServer();
 // initP2PServer(); 
+
 */
+
+// let terminator = new Terminator(idHolder, new Date(Date.now()), 
+            //     new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair)
+            // , prevHash, this.difficulty)
+
+             // const mine = () => {
+            //     return new Promise((resolve, reject) => {
+            //         const error = false;
+            //         if (!error) {
+            //             resolve(terminator.mineBlock(this.difficulty));
+            //             // this.addBlock(terminator);
+            //         } else {
+            //             reject('Something went incredibly wrong! lol')
+            //         }  
+            //     })
+            // }
+
+            // mine().then((res) => {
+            //     let {blockHash, nonce, prevHash} = res;
+            //     terminator.blockHash = blockHash
+            //     terminator.nonce = nonce 
+            //     terminator.prevHash = prevHash
+            //     console.log(terminator);
+            //     this.addBlock(terminator);
+            // })
