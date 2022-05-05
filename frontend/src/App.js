@@ -26,7 +26,9 @@ const App = () => {
 
   const [toggle, setToggle] = useState(false);
   const [showLoadingImg, setShowLoadingImg] = useState(true);
+  const [showTable, setShowTable] = useState(false)
   const [modelNum, setModelNum] = useState(-1);
+  const [interactMessages, setinteractMessages] = useState('')
   
   const inputTo = useRef();
   const inputFrom = useRef();
@@ -128,6 +130,12 @@ const App = () => {
     navigator.clipboard.writeText(pub);
   }
 
+  const handleDebugReqeust = (e) => {
+    e.preventDefault();
+    console.log('the handleDebugReqeust button was clicked!!!!')
+    socket.current.emit('debugrequest');
+  }
+
   const handleModal = (e) => {
     e.preventDefault();
     setToggle(!toggle);
@@ -165,13 +173,6 @@ const App = () => {
 
     socket.current.on('keygeneration', (keygen) => {
       console.log( 'this is whats comming back as keyPair on click ---> ', keygen);
-      // if(keyPair) {
-      //   // console.log('IS THIS FREKING EVER HIT?');
-      //   let temp = [];
-      //   setKeyPair(temp);
-      //   setKeyPair(keygen);
-      //   console.log('Keygen hit 2nd time!!')
-      // }
       setKeyPair(keygen);
       console.log('Keygen hit')
       
@@ -186,6 +187,15 @@ const App = () => {
       setBalance(balance)
       setBalanceTransfer(true);
       console.log('here is the balance ---> ',balance)
+    })
+
+    socket.current.on('debug', (node) => {
+      console.log('here is the NODE info ----> ', node)
+      setinteractMessages(node)
+    })
+
+    socket.current.on('showtable', () => {
+      setShowTable(true);
     })
 
     socket.current.on('requestmessage', (message) => {
@@ -234,7 +244,6 @@ const App = () => {
               
             </div> 
             }
-           
             
             <div id='button-div' className='d-flex align-items-start mb-3'>
               <MDBCol>
@@ -264,6 +273,17 @@ const App = () => {
           <h3>Welcome to the Revolution</h3>
           </div>
          : <></>}
+
+         <div >
+         <MDBRow >
+         <MDBCol></MDBCol>
+          <MDBCol className='key-card' style={{width: "1000px", backgroundColor: "black", padding: '1%', color:'white', wordWrap: 'break-word'}}>
+            <div >{interactMessages}</div>
+          </MDBCol>
+          <MDBCol></MDBCol>
+          </MDBRow>
+        </div>
+        {showTable?
           <div id='table-container'>
           <MDBTable striped className='table-responsive'>
             <MDBTableHead dark>
@@ -301,8 +321,8 @@ const App = () => {
             })}
         </tbody>
         </MDBTable>
-      </div>
-      
+      </div>: <></>}
+          
       {toggle? 
         <div>
         {data.map((item) => {
@@ -319,6 +339,7 @@ const App = () => {
       :
       <></>  
     }
+    
       <MDBRow>
           <div className='interact'>
             <div id='button-div' className='d-flex align-items-start mb-3'>
@@ -333,6 +354,9 @@ const App = () => {
               </MDBCol>
               <MDBCol>
                 <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='info' role='button' onClick={handleDebugReqeust}>Debug</MDBBtn>
               </MDBCol>
               
             </div>

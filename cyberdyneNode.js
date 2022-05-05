@@ -138,6 +138,12 @@ let initHttpServer = (server) => {
             socket.emit('sendbalance', balance);
         })
 
+        socket.on('debugrequest', () => {
+            console.log(node);
+
+            socket.emit('debug', JSON.stringify(node) + '\n');
+        })
+
         socket.on('requestcoin', (address) => {
             const timeCheck = new Date(Date.now());
             const from = addressGenerator(MINT_PRIVATE_ADDRESS);
@@ -180,18 +186,30 @@ let initHttpServer = (server) => {
             // io.to("data-room").emit("data", JSON.stringify(blockchain));
             socket.emit('requestmessage', '');
             socket.emit('sendcoin', balance)
-
-            // console.log(transaction)
-
            
         })
     })
 
-    
-    
     setInterval(() => {
         io.to("data-room").emit("data", JSON.stringify(blockchain));
+       
     }, 5000);
+
+    let counter = 0;
+
+    const initMess = setInterval(() => {
+        io.to("data-room").emit("debug", startCyberDyneChain.initMessages(counter))
+        counter++;
+        if(counter >= 8) {
+            counter = 7;
+
+            io.to("data-room").emit('showtable')
+            clearInterval(initMess)
+        }
+    }, 3000)
+
+
+    
    
    server.listen(http_port, (err) => {
     if(err) {

@@ -30,32 +30,59 @@ class CyberDyneChain {
         this.pendingTransactions = [];
         this.miningReward = 22;
     }
-    initMessages() {
-        setTimeout(() => {
-            console.log('Initiating Cyberdyne Systems...\n');
-        }, 1000);
-        setTimeout(() => {
-            console.log('⚙️⚙️⚙️ Starting T1 Project...\n');
-        }, 3500); 
-        setTimeout(() => {
-            console.log(' 🔗🔗 Creating Cyberdyne Chain 🔗🔗\n');
+    initMessages(counter) {
+        const messageArr = [
+            'Initiating Cyberdyne Systems...\n',
+            '⚙️⚙️⚙️ Starting T1 Project...⚙️⚙️⚙️\n',
+            '🔗🔗 Creating Cyberdyne Chain 🔗🔗\n',
+            '🚧🚧🚧 Minting new T1 Block...🚧🚧🚧 \n',
+            '⛓️⛓️⛓️ Cyberdyne Chain created ⛓️⛓️⛓️\n',
+            '💀💀 T1 Minted... 💀💀\n',
+            '🦾🦾 Cyberdyne Systems online 🦾🦾\n',
+            '🤖🤖 Welcome to Skynet 🤖🤖\n'
+        ]
+        console.log('counter HERE ---<>>>>>>',counter);
+        let arrLength = messageArr.length -1;
+
+        if(counter === arrLength){
+            return messageArr[arrLength]
+        
+        } else {
+            return messageArr[counter]
+        }
+
+        // setTimeout(() => {
+        //     console.log('Initiating Cyberdyne Systems...\n');
+        //     let message = 'Initiating Cyberdyne Systems...\n'
+        //     return message
+        // }, 1000);
+        // console.log('Initiating Cyberdyne Systems...\n');
+        //     let message = 'Initiating Cyberdyne Systems...\n'
+        //     return message
+        // setTimeout(() => {
+        //     console.log('⚙️⚙️⚙️ Starting T1 Project...\n');
+        // }, 3500); 
+        // setTimeout(() => {
+        //     console.log(' 🔗🔗 Creating Cyberdyne Chain 🔗🔗\n');
             
-        }, 5500);
-        setTimeout(() => {
-            console.log(' 🚧🚧🚧🚧🚧 Minting new T1 Block...🚧🚧🚧🚧🚧 \n');        
-        }, 5500); 
-        setTimeout(() => {
-            console.log('⛓️⛓️⛓️ Cyberdyne Chain created ⛓️⛓️⛓️\n');
-        }, 7600);
-        setTimeout(() => {
-            console.log('💀 T1 Minted... 💀\n'); 
-        }, 7600);
-        setTimeout(() => {
-            console.log('🦾 Cyberdyne Systems online 🦾\n');
-        }, 10000);
-        setTimeout(() => {
-            console.log('🤖🤖 Welcome to Skynet 🤖🤖\n');
-        }, 11000);
+        // }, 5500);
+        // setTimeout(() => {
+        //     console.log(' 🚧🚧🚧🚧🚧 Minting new T1 Block...🚧🚧🚧🚧🚧 \n');        
+        // }, 5500); 
+        // setTimeout(() => {
+        //     console.log('⛓️⛓️⛓️ Cyberdyne Chain created ⛓️⛓️⛓️\n');
+        // }, 7600);
+        // setTimeout(() => {
+        //     console.log('💀 T1 Minted... 💀\n'); 
+        // }, 7600);
+        // setTimeout(() => {
+        //     console.log('🦾 Cyberdyne Systems online 🦾\n');
+        // }, 10000);
+        // setTimeout(() => {
+        //     console.log('🤖🤖 Welcome to Skynet 🤖🤖\n');
+        // }, 11000);
+
+       
     }
 
     mineGenesisBlock() {
@@ -136,7 +163,7 @@ class CyberDyneChain {
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
             
-            terminator.data.push(new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair), i);
+            terminator.data.push(new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair, i));
             // terminator.data = Object.assign({i: new Transaction(this.pendingTransactions[i].from, this.pendingTransactions[i].to, this.pendingTransactions[i].amount, this.miningReward, new Date(Date.now()), this.pendingTransactions[i].keyPair, this.transactionIndex = i)}, terminator.data);
             
         
