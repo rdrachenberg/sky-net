@@ -30,6 +30,7 @@ class CyberDyneChain {
         this.pendingTransactions = [];
         this.miningReward = 22;
     }
+    
     initMessages(counter) {
         const messageArr = [
             'Initiating Cyberdyne Systems...\n',
@@ -232,6 +233,34 @@ class CyberDyneChain {
         }
         console.log('Here is your freaking balance sir :-)',balance)
         return balance
+    }
+
+    arrayToObj = (array, keyField) => 
+        array.reduce((obj, item) => {
+            obj[item[keyField]] = item;
+
+            return obj
+        }, {})
+    
+
+    getBalanceOfAllAddress() {
+        let balance = 0;
+        let confirmedBalances = {};
+
+        for(const terminator of this.skynet_chain) {
+            // console.log(terminator.data.from);
+           
+                confirmedBalances = 
+                Object.assign({
+                    [terminator.data.from]: this.getBalanceOfAddress(terminator.data.from),
+                    [terminator.data.to]: this.getBalanceOfAddress(terminator.data.to)
+                }, confirmedBalances)
+        }
+
+        
+        console.log('Here is your freaking balance sir :-)',confirmedBalances)
+        
+        return confirmedBalances
     }
 
     isValid() {

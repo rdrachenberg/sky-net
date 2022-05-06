@@ -61,8 +61,10 @@ const App = () => {
 
   const handleAddBlockClick = () => {
     console.log('That handle Add Block Click button was clicked')
+    setShowTable(true);
     socket.current.emit('add-block');
     // socket.emit('data');
+    
   }
 
   const handleAddTransactionClick = (e) => {
@@ -133,6 +135,7 @@ const App = () => {
   const handleDebugReqeust = (e) => {
     e.preventDefault();
     console.log('the handleDebugReqeust button was clicked!!!!')
+    setShowTable(!showTable);
     socket.current.emit('debugrequest');
   }
 
@@ -147,8 +150,20 @@ const App = () => {
   const handleAboutRequest = (e) => {
     e.preventDefault();
     console.log('the handle About Request Button was Click -->> ');
-
+    setShowTable(!showTable);
     socket.current.emit('aboutrequest');
+  }
+
+  const handleRestBoxClick = (e) => {
+    e.preventDefault();
+    console.log('handle Rest Box Click')
+    setShowTable(!showTable);
+  }
+
+  const handleConfirmedTransactionClick = (e) => {
+    e.preventDefault();
+    console.log('handle confirmed transaction clicked')
+    socket.current.emit('confirmed')
   }
 
   useEffect(() => {
@@ -203,8 +218,12 @@ const App = () => {
 
     socket.current.on('about', (about) => {
       console.log('Here is the Abmout var --->>>>',about);
-      
       setinteractMessages(about)
+    })
+
+    socket.current.on('confirmedtransactions', (confirmedTransactions) => {
+      console.log(confirmedTransactions);
+      setinteractMessages(confirmedTransactions)
     })
 
     socket.current.on('showtable', () => {
@@ -287,7 +306,7 @@ const App = () => {
          <MDBRow >
          <MDBCol></MDBCol>
           <MDBCol className='key-card' style={{width: "1000px", backgroundColor: "black", padding: '1%', color:'white', wordWrap: 'break-word'}}>
-            <div >{interactMessages}</div>
+            <div onClick={handleRestBoxClick} >{interactMessages}</div>
           </MDBCol>
           <MDBCol></MDBCol>
           </MDBRow>
@@ -369,6 +388,9 @@ const App = () => {
               </MDBCol>
               <MDBCol>
                 <MDBBtn tag='a' outline color='info' role='button' onClick={handleAboutRequest}>About</MDBBtn>
+              </MDBCol>
+              <MDBCol>
+                <MDBBtn tag='a' outline color='primary' role='button' onClick={handleConfirmedTransactionClick}>Confirmed</MDBBtn>
               </MDBCol>
               
             </div>

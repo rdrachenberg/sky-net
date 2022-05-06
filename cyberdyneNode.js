@@ -59,8 +59,12 @@ class Node {
 
 const node = new Node(uuidv4());
 const about = new About(node.nodeId, 20713, node.selfUrl, node.peers, startCyberDyneChain.difficulty, startCyberDyneChain.getLastBlock().id, startCyberDyneChain.pendingTransactions)
+const confirmed = () => {
+    return startCyberDyneChain.getBalanceOfAllAddress();
+}
 // console.log(node);
 // console.log(about);
+// startCyberDyneChain.getBalanceOfAllAddress();
 
 setInterval(() => {
     let prevBlockTime = startCyberDyneChain.getLastBlock().timestamp;
@@ -69,7 +73,7 @@ setInterval(() => {
     while(prevBlockTime < (Date.now() + 10000)) {
         break;
     }
-
+    
     console.log('Terminator patrol\n\n', prevBlockTime + '\n');
 }, 10000)
 
@@ -146,6 +150,11 @@ let initHttpServer = (server) => {
             console.log(about);
             socket.emit('about', JSON.stringify(about) + '\n');
             
+        })
+
+        socket.on('confirmed', () => {
+            console.log(confirmed);
+            socket.emit('confirmedtransactions', JSON.stringify(confirmed()))
         })
 
         socket.on('requestcoin', (address) => {
