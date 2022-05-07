@@ -58,10 +58,13 @@ class Node {
 }
 
 const node = new Node(uuidv4());
-const about = new About(node.nodeId, 20713, node.selfUrl, node.peers, startCyberDyneChain.difficulty, startCyberDyneChain.getLastBlock().id, startCyberDyneChain.pendingTransactions)
+
+
 const confirmed = () => {
     return startCyberDyneChain.getBalanceOfAllAddress();
 }
+
+const about = new About(node.nodeId, 20713, node.selfUrl, node.peers, startCyberDyneChain.difficulty, confirmed(), startCyberDyneChain.pendingTransactions)
 // console.log(node);
 // console.log(about);
 // startCyberDyneChain.getBalanceOfAllAddress();

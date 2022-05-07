@@ -370,12 +370,12 @@ const App = () => {
     
       <MDBRow>
           <div className='interact'>
-            <div id='button-div' className='d-flex align-items-start mb-3'>
+            <div id='button-div' className='d-flex align-items-center mb-1'>
               <MDBCol>
-                <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
+                <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Last block</MDBBtn>
               </MDBCol>
               <MDBCol>
-                <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Get full chain</MDBBtn>
+                <MDBBtn tag='a' outline color='info' role='button' onClick={handleGetFullClick}>Full chain</MDBBtn>
               </MDBCol>
               <MDBCol>
                 <MDBBtn tag='a' outline color='warning' role='button' onClick={handleAddBlockClick}>Add Block</MDBBtn>
@@ -384,10 +384,10 @@ const App = () => {
                 <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
               </MDBCol>
               <MDBCol>
-                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleDebugReqeust}>Debug</MDBBtn>
+                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleDebugReqeust}>Debug Info</MDBBtn>
               </MDBCol>
               <MDBCol>
-                <MDBBtn tag='a' outline color='info' role='button' onClick={handleAboutRequest}>About</MDBBtn>
+                <MDBBtn tag='a' outline color='info' role='button' onClick={handleAboutRequest}>About Info</MDBBtn>
               </MDBCol>
               <MDBCol>
                 <MDBBtn tag='a' outline color='primary' role='button' onClick={handleConfirmedTransactionClick}>Confirmed</MDBBtn>

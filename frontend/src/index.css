@@ -32,6 +32,8 @@ code {
 
 #button-div {
   margin: 2%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 
