@@ -111,6 +111,11 @@ code {
   
 }
 
+.key-card:hover{
+  text-align: left;
+  display: block;
+}
+
 #private-key {
   font-weight: bolder;
 }
