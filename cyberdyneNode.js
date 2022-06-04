@@ -146,18 +146,18 @@ let initHttpServer = (server) => {
         socket.on('debugrequest', () => {
             console.log(node);
 
-            socket.emit('debug', JSON.stringify(node) + '\n');
+            socket.emit('debug', node);
         })
 
         socket.on('aboutrequest', () => {
             console.log(about);
-            socket.emit('about', JSON.stringify(about) + '\n');
+            socket.emit('about', about);
             
         })
 
         socket.on('confirmed', () => {
             console.log(confirmed);
-            socket.emit('confirmedtransactions', JSON.stringify(confirmed()))
+            socket.emit('confirmedtransactions', confirmed());
         })
 
         socket.on('requestcoin', (address) => {

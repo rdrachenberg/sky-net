@@ -16,20 +16,22 @@ export default function Modal(props) {
   const toggleShow = () => setBasicModal(!basicModal);
   
   // console.log(props.data);
-
-  if(!basicModal) {
-    console.log('here are the freaking props --- > ', props.data)
-  }
+  useEffect(() => {
+    if(!basicModal) {
+      console.log('here are the freaking props --- > ', props.data)
+    }
+    
+    let tmpRecord;
   
-  let tmpRecord;
-
-  const propsArray = props.data;
-  console.log(propsArray);
-
-  // const propsArray = Object.entries(props)[0];
-  // console.log(propsArray);
-  // setDataModal(propsArray)
-  // console.log(dataModal);
+    const propsArray = props.data;
+    // console.log(propsArray);
+  
+    // const propsArray = Object.entries(props)[0];
+    // console.log(propsArray);
+    // setDataModal(propsArray)
+    // console.log(dataModal);
+  }, [])
+  
 
   return (
     <>
@@ -38,7 +40,6 @@ export default function Modal(props) {
         <MDBModalContent id={'modal-content'}>
           <MDBModalHeader>
             <MDBModalTitle>Cyberdyne Systems Terminator Block</MDBModalTitle>
-            
             <MDBCardText style={{paddingLeft: '5%'}}><img style={{maxWidth: '55px', maxHeight:'10%'}} src={'https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'}></img></MDBCardText>
             <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
           </MDBModalHeader>

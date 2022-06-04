@@ -42,7 +42,9 @@ class Terminator {
 
         while(this.blockHash.substring(0, difficulty) !== Array(difficulty + 1).join('0')) {
             console.log(this.blockHash.substring(0, difficulty));
+            
             console.log(Array(difficulty + 1).join('0'));
+            
             
             this.nonce++;
             this.blockHash = this.makeHash();

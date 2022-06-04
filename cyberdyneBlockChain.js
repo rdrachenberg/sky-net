@@ -42,7 +42,7 @@ class CyberDyneChain {
             '🦾🦾 Cyberdyne Systems online 🦾🦾\n',
             '🤖🤖 Welcome to Skynet 🤖🤖\n'
         ]
-        console.log('counter HERE ---<>>>>>>',counter);
+        // console.log('counter HERE ---<>>>>>>',counter);
         let arrLength = messageArr.length -1;
 
         if(counter === arrLength){
@@ -160,6 +160,12 @@ class CyberDyneChain {
         let terminator = new Terminator(idHolder, new Date(Date.now()), [], prevHash, this.difficulty);
 
         // console.log(terminatorOne);
+        console.log(this.pendingTransactions.length);
+
+        if(this.pendingTransactions.length === 0) {
+            console.log('sorry, you need to have transaction data in order to mine');
+            return;
+        }
 
         for(let i =0; i < this.pendingTransactions.length; i++) {
 
@@ -174,7 +180,7 @@ class CyberDyneChain {
 
         for (const t in temp) {
             console.log('\n')
-            console.log(t);
+            console.log('where is this', t);
             console.log(temp[t])
             // terminator.data = temp[t];
             console.log('^^^^^^^ TTHIS IS HERE ^^^^^^^^')
@@ -199,7 +205,7 @@ class CyberDyneChain {
             terminator.nonce = nonce 
             
             terminator.prevHash = prevHash
-            // terminator.data = {...terminator.data[0]}; //! I think HERE IS THE ISSUE. COMING IN AS ARRAY. CONVERTING TO OBJECT      
+            // terminator.data = {...terminator.data[0]}; //!? I think HERE IS THE ISSUE. COMING IN AS ARRAY. CONVERTING TO OBJECT      
             console.log('terminator.DATA here --->>>>>>', terminator.data);
             console.log(terminator);
             this.addBlock(terminator);
@@ -257,7 +263,6 @@ class CyberDyneChain {
                 }, confirmedBalances)
         }
 
-        
         console.log('Here is your freaking balance sir :-)',confirmedBalances)
         
         return confirmedBalances

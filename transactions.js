@@ -3,7 +3,7 @@ const crypto = require('crypto'), SHA256 = message => crypto.createHash('sha256'
 const Elliptic = require( 'elliptic');
 
 const ec = new Elliptic.ec('secp256k1');
-const keccak256 = require('js-sha3').keccak256;
+// const keccak256 = require('js-sha3').keccak256;
 // const MINT_PRIVATE_KEY = process.env.MINT_PRIVATE_ADDRESS;
 // const MINT_KEY_PAIR = ec.keyFromPrivate(MINT_PRIVATE_KEY, 'hex');
 let address;
@@ -83,10 +83,7 @@ class Transaction { // define and export class with a constructor
             this.senderPubKey = passedInPKey.getPublic('hex');
 
             return this.signature
-        // }
-        
-        
-        
+        // }  
     }
 
     isValid() {

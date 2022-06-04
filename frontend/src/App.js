@@ -21,14 +21,18 @@ const App = () => {
 
   const [keyPair, setKeyPair] = useState([]);
   const [keyPairData, setKeyPairData] = useState(false)
+  
   const [balance, setBalance] =useState([])
   const [balanceTransfer, setBalanceTransfer] = useState(false);
 
   const [toggle, setToggle] = useState(false);
   const [showLoadingImg, setShowLoadingImg] = useState(true);
-  const [showTable, setShowTable] = useState(false)
+  
+  const [showTable, setShowTable] = useState(false);
   const [modelNum, setModelNum] = useState(-1);
-  const [interactMessages, setinteractMessages] = useState('')
+  
+  const [interactMessages, setinteractMessages] = useState('');
+  const [isDataCentered, setIsDataCentered] = useState(true);
   
   const inputTo = useRef();
   const inputFrom = useRef();
@@ -43,10 +47,12 @@ const App = () => {
    
     let lengthResult = data.length -1;
     let newData = [data[lengthResult]];
+    let formattedData = newData;
 
     console.log('our last button click was clicked');
     console.log(newData);
-    
+    setIsDataCentered(false);
+    setinteractMessages(formattedData);
     setData(newData);
   
   }
@@ -54,8 +60,10 @@ const App = () => {
   const handleGetFullClick = () => {
     let wholeChain = fullChain;
     console.log('This is the full chain button click  ---->\n', wholeChain );
-
+    setIsDataCentered(false);
+    setinteractMessages(wholeChain);
     setData(wholeChain);
+    
 
   }
 
@@ -85,9 +93,9 @@ const App = () => {
                           to: to, 
                           amount: amount,
                           privateKey: privKey
-                        }
+                        };
 
-    socket.current.emit('transaction', (transaction))
+    socket.current.emit('transaction', (transaction));
     
     // clean up inputs 
     inputFrom.current.value = '';
@@ -117,25 +125,23 @@ const App = () => {
   }
 
   const handleToggleImg = (e) => {
-    e.preventDefault();
-    
+    e.preventDefault();    
     setShowLoadingImg(!showLoadingImg);
   }
 
   const handleCopyPublicKey = (e) => {
     e.preventDefault();
-    
-    console.log(e)
+    // console.log(e)
     let pub = keyPair[0].keys.publicKey;
-
     console.log(pub)
     navigator.clipboard.writeText(pub);
   }
 
-  const handleDebugReqeust = (e) => {
+  const handleDebugRequest = (e) => {
     e.preventDefault();
-    console.log('the handleDebugReqeust button was clicked!!!!')
-    setShowTable(!showTable);
+    console.log('the handleDebugRequest button was clicked!!!!')
+    setIsDataCentered(false);
+    setShowTable(false);
     socket.current.emit('debugrequest');
   }
 
@@ -150,19 +156,22 @@ const App = () => {
   const handleAboutRequest = (e) => {
     e.preventDefault();
     console.log('the handle About Request Button was Click -->> ');
-    setShowTable(!showTable);
+    setIsDataCentered(false);
+    setShowTable(false);
     socket.current.emit('aboutrequest');
   }
 
   const handleRestBoxClick = (e) => {
     e.preventDefault();
-    console.log('handle Rest Box Click')
+    console.log('handle Rest Box Click');
     setShowTable(!showTable);
   }
 
   const handleConfirmedTransactionClick = (e) => {
     e.preventDefault();
-    console.log('handle confirmed transaction clicked')
+    console.log('handle confirmed transaction clicked');
+    setIsDataCentered(false);
+    setShowTable(false);
     socket.current.emit('confirmed')
   }
 
@@ -177,48 +186,49 @@ const App = () => {
       // setMessages('This is here')
       data = JSON.parse(data);
 
-      setFullChain(data)
+      setFullChain(data);
       setWorking(true);
 
       setData(data);
       console.log(data);
+      
 
-      if(data && data !== undefined){
-        data.current.addEventListener('DOMNodeInserted', event => {
-          const {currentTarget: target} = event;
-          // console.log(target)
-          target.scrollIntoView({top: target.scrollHeight, behavior: 'smooth'});
+      // if(data && data !== undefined){
+      //   data.current.addEventListener('DOMNodeInserted', event => {
+      //     const {currentTarget: target} = event;
+      //     // console.log(target)
+      //     target.scrollIntoView({top: target.scrollHeight, behavior: 'smooth'});
           
-        });
-      }
+      //   });
+      // }
     })
 
     socket.current.on('keygeneration', (keygen) => {
       console.log( 'this is whats comming back as keyPair on click ---> ', keygen);
       setKeyPair(keygen);
-      console.log('Keygen hit')
-      
+      console.log('Keygen hit');
     })
 
     socket.current.on('sendbalance', (balance) => {
-      setBalance(balance)
-      console.log('here is the balance ---> ',balance)
+      setBalance(balance);
+      console.log('here is the balance ---> ',balance);
     })
     
     socket.current.on('sendcoin', (balance) => {
-      setBalance(balance)
+      setBalance(balance);
       setBalanceTransfer(true);
-      console.log('here is the balance ---> ',balance)
+      console.log('here is the balance ---> ',balance);
     })
 
     socket.current.on('debug', (node) => {
-      console.log('here is the NODE info ----> ', node)
-      setinteractMessages(node)
+      console.log('here is the NODE info ----> ', node);
+      setinteractMessages(node);
+      
     })
 
     socket.current.on('about', (about) => {
       console.log('Here is the Abmout var --->>>>',about);
-      setinteractMessages(about)
+      setinteractMessages(about);
     })
 
     socket.current.on('confirmedtransactions', (confirmedTransactions) => {
@@ -250,6 +260,7 @@ const App = () => {
     }
   },[])
 
+  
   return (
     <div className='container'>
     <MDBContainer>
@@ -257,22 +268,18 @@ const App = () => {
         <div className='text-center'>
         <MDBRow>
           <div className='interact-header'>
-            
             {showLoadingImg ? <h2 onClick={handleToggleImg}>CyberDyne Systems Terminator Chain</h2>
             :
             <div id='hidden-robot'>
-            <MDBCol>
-              <h2 onClick={handleToggleImg}>CyberDyne Systems Terminator Chain 
-              <b/>   
-                  
-              </h2>
-              <img style={{maxWidth: '40px'}} src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png' onClick={handleToggleImg}/>
+              <MDBCol>
+                <h2 onClick={handleToggleImg}>CyberDyne Systems Terminator Chain 
+                <b/>   
+                    
+                </h2>
+                <img style={{maxWidth: '40px'}} src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png' onClick={handleToggleImg}/>
               </MDBCol>
-              
-              
             </div> 
             }
-            
             <div id='button-div' className='d-flex align-items-start mb-3'>
               <MDBCol>
                 <MDBBtn tag='a' outline color='primary'role='button' onClick={handleLastClick}>Get last block</MDBBtn>
@@ -290,27 +297,41 @@ const App = () => {
             </div>
           </div>
         </MDBRow>
-        {showLoadingImg?
-        <div>
-          <img
-            className='mb-4'
-            src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
-            style={{ flex: 1, width: 250, height: 400, resizeMode: 'contain' }}
-            onClick={handleToggleImg}
-          />
-          <h3>Welcome to the Revolution</h3>
-          </div>
-         : <></>}
-
-         <div >
-         <MDBRow >
-         <MDBCol></MDBCol>
-          <MDBCol className='key-card' style={{width: "1000px", backgroundColor: "black", padding: '1%', color:'white', wordWrap: 'break-word'}}>
-            <div onClick={handleRestBoxClick} >{interactMessages}</div>
-          </MDBCol>
-          <MDBCol></MDBCol>
-          </MDBRow>
-        </div>
+          {showLoadingImg?
+            <div>
+              <img
+                className='mb-4'
+                src='https://cdn.pixabay.com/photo/2013/07/12/18/16/terminator-153160_960_720.png'
+                style={{ flex: 1, width: 250, height: 400, resizeMode: 'contain' }}
+                onClick={handleToggleImg}
+              />
+              <h3>Welcome to the Revolution</h3>
+              </div>
+          : 
+            <></>
+          }
+          {isDataCentered? 
+            <div>
+              <MDBRow >
+              <MDBCol></MDBCol>
+                <MDBCol className='key-card' style={{width: "1000px", backgroundColor: "black", padding: '1%', color:'white', wordWrap: 'break-word'}}>
+                  <div onClick={handleRestBoxClick} >{interactMessages}</div>
+                </MDBCol>
+                <MDBCol></MDBCol>
+                </MDBRow>
+              </div>
+            : 
+            <div className='data-display'>
+              <MDBRow >
+              <MDBCol></MDBCol>
+                <MDBCol className='key-card' style={{width: "1000px", backgroundColor: "black", padding: '1%', color:'white', wordWrap: 'break-word'}}>
+                  <div onClick={handleRestBoxClick} ><pre>{JSON.stringify(interactMessages, null, 4)}</pre></div>
+                </MDBCol>
+                <MDBCol></MDBCol>
+                </MDBRow>
+              </div>
+            }
+         
         {showTable?
           <div id='table-container'>
           <MDBTable striped className='table-responsive'>
@@ -353,21 +374,18 @@ const App = () => {
           
       {toggle? 
         <div>
-        {data.map((item) => {
-          console.log(item)
-          let tmp = item;
-          console.log(modelNum)
-          return (
+          {data.map((item) => {
+            let tmp = item;
             
-            <Modal data={tmp} />
-          )
-        })}
-       
+            return (
+              
+              <Modal data={tmp} />
+            )
+          })}
         </div>
       :
-      <></>  
-    }
-    
+        <></>  
+      }
       <MDBRow>
           <div className='interact'>
             <div id='button-div' className='d-flex align-items-center mb-1'>
@@ -384,7 +402,7 @@ const App = () => {
                 <MDBBtn tag='a' outline color='danger' role='button' onClick={handleKeyGeneration}>Generate Keys</MDBBtn>
               </MDBCol>
               <MDBCol>
-                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleDebugReqeust}>Debug Info</MDBBtn>
+                <MDBBtn tag='a' outline color='warning' role='button' onClick={handleDebugRequest}>Debug Info</MDBBtn>
               </MDBCol>
               <MDBCol>
                 <MDBBtn tag='a' outline color='info' role='button' onClick={handleAboutRequest}>About Info</MDBBtn>

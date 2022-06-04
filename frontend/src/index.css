@@ -44,6 +44,10 @@ code {
   position: relative;
 }
 
+.data-display {
+  text-align: left;
+}
+
 .glowing::before {
   content: '';
   position: absolute;
@@ -111,10 +115,10 @@ code {
   
 }
 
-.key-card:hover{
+/* .key-card:hover{
   text-align: left;
   display: block;
-}
+} */
 
 #private-key {
   font-weight: bolder;
