@@ -23,7 +23,7 @@
 
 ### A blockchain written in Javascript utilizing websockets through Socket.io.
 
-#### adapted using this tutorial: [Creating a blockchain with Javascript](\https://www.youtube.com/watch?v=zVqczFZr124)
+#### adapted using this tutorial: [Creating a blockchain with Javascript](https://www.youtube.com/watch?v=zVqczFZr124)
 
 </br>
 
