@@ -18,6 +18,15 @@
         <img src='https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg?logo=minutemailer&logoColor=#29B99B'>
     </a>
 </p>
+<p align='center'>
+    <a href='https://cyberdyne-sky-net.herokuapp.com/' >
+        <img src='https://img.shields.io/badge/Heroku-Deployed-blue?style=for-the-badge'>
+    </a>
+    </br>
+    <a href='https://ryan-react-app.herokuapp.com/' >
+        <img src='https://media.giphy.com/media/UQ1PjoQWY9XrejfOGC/giphy.gif' width=150px>
+    </a>
+</p>
 
 </br>
 
