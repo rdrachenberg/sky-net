@@ -40,7 +40,7 @@ let faucetRequestAddress = [];
 const privateKey = process.env.NODE_PRIVATE_KEY || ec.genKeyPair().getPrivate('hex');
 const keyPair = ec.keyFromPrivate(privateKey, 'hex');
 const publicKey = keyPair.getPublic('hex');
-console.log('here is the Private Key:',privateKey);
+// console.log('here is the Private Key:',privateKey);
 console.log('here is hte public key',publicKey);
 
 const MINT_PRIVATE_ADDRESS = process.env.MINT_PRIVATE_ADDRESS;
@@ -84,8 +84,8 @@ setInterval(() => {
 
 let initHttpServer = (server) => {
 
-    app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(path.join(__dirname, './frontend/public')));
+    // app.use(express.static(path.join(__dirname, 'public')));
+    // app.use(express.static(path.join(__dirname, './frontend/public')));
     app.use(express.static(path.join(__dirname, './frontend/build')));
     
     app.get('*', (res, req) => {
