@@ -80,17 +80,17 @@ setInterval(() => {
     console.log('Terminator patrol\n\n', prevBlockTime + '\n');
 }, 10000)
 
-
-
-let initHttpServer = (server) => {
-
-    // app.use(express.static(path.join(__dirname, 'public')));
-    // app.use(express.static(path.join(__dirname, './frontend/public')));
-    app.use(express.static(path.join(__dirname, './frontend/build')));
+app.use(express.static(path.join(__dirname, './frontend/build')));
     
     app.get('*', (res, req) => {
         res.sendFile(path.join(__dirname + './frontend/build/index.html'));
     })
+
+let initHttpServer = (server) => {
+
+    // app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, './frontend/public')));
+    
 
    const io = socketIo(server, {
        cors: {
