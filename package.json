@@ -36,6 +36,7 @@
     "dotenv": "^16.0.0",
     "elliptic": "^6.5.4",
     "express": "^4.17.2",
+    "express-favicon": "^2.0.1",
     "http": "^0.0.1-security",
     "js-sha3": "^0.8.0",
     "mdbreact": "^5.2.0",
