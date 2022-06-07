@@ -1,7 +1,7 @@
 # sky-net
 #### A MERN (MongoDB, Express.js, React.js, Node.js) stack app to display my personal portfolio. [Heroku Deployed](/) 
 
-<p align='center'>
+<p align='left'>
     <img src='https://img.shields.io/badge/JavaScript-93.5%25-brightgreen?style=plastic&logo=javascript'>
     <img src='https://img.shields.io/badge/CSS-3.9%25-green?style=plascit&logo=CSS3&logoColor=green'>
     <img src='https://img.shields.io/badge/HTML-2.6%25-orange?style=plastic&logo=HTML5&logoColor=orange'>
@@ -18,7 +18,7 @@
         <img src='https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg?logo=minutemailer&logoColor=#29B99B'>
     </a>
 </p>
-<p align='center'>
+<p align='left'>
     <a href='https://cyberdyne-sky-net.herokuapp.com/' >
         <img src='https://img.shields.io/badge/Heroku-Deployed-blue?style=for-the-badge'>
     </a>
@@ -100,7 +100,7 @@
 </br>
 
 ### Generate Key Pair  
-<p align='center'>
+<p align='left'>
     <img src="./assets/GenerateKeyPair.png">
     <img src="./assets/GeneratedKeyPair.png">
 </p>
@@ -108,20 +108,20 @@
 </br>
 
 ### Send a Transaction
-<p align='center'>
+<p align='left'>
 <img src="./assets/SendTransaction.png">
 </p>
 <br />
     Click send, then click the add block button to mine the transaction and add it to the blockchain
 <br />
-<p align='center'>
+<p align='left'>
 <img src="./assets/AddBlock.png">
 </p>
 </br>
 </br>
 
 ### Request a Coin
-<p align='center'>
+<p align='left'>
 <img src="./assets/RequestCoin.png">
 <img src="./assets/RequestedCoin.png">
 </p>
