@@ -150,7 +150,8 @@ let initHttpServer = (server) => {
         })
 
         socket.on('aboutrequest', () => {
-            console.log(about);
+            let temp = about
+            console.log(temp);
             socket.emit('about', about);
             
         })
@@ -172,8 +173,7 @@ let initHttpServer = (server) => {
 
             for(i=0; i < faucetRequestAddress.length; i++) {
                 if(faucetRequestAddress[i] === address){
-                    if(faucetRequestAddress[i+1] <= (timeCheck - 60000)) 
-                    {
+                    if(faucetRequestAddress[i+1] <= (timeCheck - 60000)) {
 
                         startCyberDyneChain.addTransaction(transaction);
                         startCyberDyneChain.minePendingTransactions(publicKey)
@@ -183,11 +183,13 @@ let initHttpServer = (server) => {
                         socket.emit('sendcoin', balance)
                         
                         return;
+
                     } else {
                         let message = 'You have to wait 1 hour\n to get more faucet coin'
                         socket.emit('requestmessage', message)
                         console.log('sorry sucker; you already requested this hour');
-                        return 
+                        
+                        return; 
                     }   
                 }
             }

@@ -8,7 +8,7 @@ class About {
         this.peers = peers;
         this.currentDifficulty = currentDifficulty;
         this.confirmedTransactions = confirmedTransactions;
-        this.pendingTransactions = pendingTransactions
+        this.pendingTransactions = [];
     }
 }
 

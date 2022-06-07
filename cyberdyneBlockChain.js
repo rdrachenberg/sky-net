@@ -177,14 +177,7 @@ class CyberDyneChain {
         }
         let temp = {...terminator.data}
         terminator.data = {...terminator.data[0]}
-
-        for (const t in temp) {
-            console.log('\n')
-            console.log('where is this', t);
-            console.log(temp[t])
-            // terminator.data = temp[t];
-            console.log('^^^^^^^ TTHIS IS HERE ^^^^^^^^')
-        }
+        console.log(temp);
         
         const mine = () => {
             return new Promise((resolve, reject) => {
