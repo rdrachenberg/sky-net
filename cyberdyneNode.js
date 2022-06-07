@@ -86,7 +86,7 @@ app.use(express.static(path.join(__dirname, './frontend/build')));
 
 app.use(express.static(path.resolve(__dirname, './frontend/build')));
 
-app.use(favicon(__dirname + './frontend/build'));
+app.use(favicon(__dirname + './frontend/build/favicon.ico'));
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, './frontend/build', 'index.html'));
