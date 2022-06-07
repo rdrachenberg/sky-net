@@ -50,7 +50,7 @@ const MINT_PUBLIC_ADDRESS = MINT_KEY_PAIR.getPublic('hex');
 class Node {
     constructor(nodeId, selfUrl, peers, chain, server){
         this.nodeId = nodeId;
-        this.selfUrl = 'http://localhost:' + http_port;
+        this.selfUrl = process.env.PORT || 'http://localhost:' + http_port;
         this.peers = [];
         this.chain = blockchain;
         this.server = server;
@@ -81,6 +81,13 @@ setInterval(() => {
 }, 10000)
 
 app.use(express.static(path.join(__dirname, './frontend/build')));
+
+app.use(express.static(path.resolve(__dirname, './frontend/build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './frontend/build', 'index.html'));
+})
+// app.use(express.static(path.join(__dirname, './frontend/build')));
     
     // app.get('*', (res, req) => {
     //     res.sendFile(path.join(__dirname + './frontend/build/index.html'));
@@ -89,7 +96,7 @@ app.use(express.static(path.join(__dirname, './frontend/build')));
 let initHttpServer = (server) => {
 
     // app.use(express.static(path.join(__dirname, 'public')));
-    app.use(express.static(path.join(__dirname, './frontend/public')));
+    // app.use(express.static(path.join(__dirname, './frontend/public')));
     
 
    const io = socketIo(server, {
