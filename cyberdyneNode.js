@@ -24,7 +24,7 @@ const { addressGenerator } = require('./addressGenerator');
 const startCyberDyneChain = new CyberDyneChain();
 
 // PORT Assignment local dev
-let http_port = process.env.HTTP_PORT || 8000;
+let http_port = process.env.PORT || 8000;
 let ptp_port = process.env.HTTP_PORT || 6010;
 let addressOne = `http://localhost:${http_port}`;
 let addressTwo = `http://localhost:${ptp_port}`;
