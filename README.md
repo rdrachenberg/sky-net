@@ -1,7 +1,7 @@
 # sky-net
 #### A MERN (MongoDB, Express.js, React.js, Node.js) stack app to display my personal portfolio. [Heroku Deployed](/) 
 
-<p align='left'>
+<p align='center'>
     <img src='https://img.shields.io/badge/JavaScript-93.5%25-brightgreen?style=plastic&logo=javascript'>
     <img src='https://img.shields.io/badge/CSS-3.9%25-green?style=plascit&logo=CSS3&logoColor=green'>
     <img src='https://img.shields.io/badge/HTML-2.6%25-orange?style=plastic&logo=HTML5&logoColor=orange'>
@@ -18,7 +18,7 @@
         <img src='https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg?logo=minutemailer&logoColor=#29B99B'>
     </a>
 </p>
-<p align='left'>
+<p align='center'>
     <a href='https://cyberdyne-sky-net.herokuapp.com/' >
         <img src='https://img.shields.io/badge/Heroku-Deployed-blue?style=for-the-badge'>
     </a>
