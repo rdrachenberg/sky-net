@@ -84,6 +84,7 @@ setInterval(() => {
 
 let initHttpServer = (server) => {
 
+    app.use(express.static(path.join(__dirname, 'public')));
     app.use(express.static(path.join(__dirname, './frontend/public')));
     app.use(express.static(path.join(__dirname, './frontend/build')));
     
