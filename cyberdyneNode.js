@@ -234,7 +234,7 @@ let initHttpServer = (server) => {
 
     
    
-   server.listen(http_port, (err) => {
+   server.listen(process.env.PORT || http_port, (err) => {
     if(err) {
         console.log(err);
     }
