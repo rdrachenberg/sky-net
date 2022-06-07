@@ -99,7 +99,7 @@ let initHttpServer = (server) => {
        pingTimeout: 180000, pingInterval: 25000
     })
 
-    node.server = 'http://localhost:' + http_port;
+    node.server = process.env.PORT || 'http://localhost:' + http_port;
 
     app.set('socketio', io);
     
