@@ -176,7 +176,8 @@ const App = () => {
   }
 
   useEffect(() => {
-    socket.current = io('ws://localhost:8000');
+    // socket.current = io('ws://localhost:8000'); // dev
+    socket.current = io('ws://' + process.env.PORT);
 
     socket.current.on('connect', () => {
       console.log(socket.current.id);
