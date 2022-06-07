@@ -100,23 +100,31 @@
 </br>
 
 ### Generate Key Pair  
-<img src="./assets/GenerateKeyPair.png">
-<img src="./assets/GeneratedKeyPair.png">
+<p align='center'>
+    <img src="./assets/GenerateKeyPair.png">
+    <img src="./assets/GeneratedKeyPair.png">
+</p>
 </br>
 </br>
 
 ### Send a Transaction
+<p align='center'>
 <img src="./assets/SendTransaction.png">
+</p>
 <br />
-Click send, then click the add block button to mine the transaction and add it to the blockchain
+    Click send, then click the add block button to mine the transaction and add it to the blockchain
 <br />
+<p align='center'>
 <img src="./assets/AddBlock.png">
+</p>
 </br>
 </br>
 
 ### Request a Coin
+<p align='center'>
 <img src="./assets/RequestCoin.png">
 <img src="./assets/RequestedCoin.png">
+</p>
 </br>
 </br>
 
@@ -124,11 +132,6 @@ Click send, then click the add block button to mine the transaction and add it t
 
 #### Get the Balance of a Given Address
 <img src="./assets/GetBalance.png">
-</br>
-</br>
-### Contact Me
-
-<img src="./assets/contact-me.png">
 </br>
 </br>
 
