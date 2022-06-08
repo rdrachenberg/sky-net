@@ -42,7 +42,7 @@
 
 ### Clone the app
     In your terminal run:
-    git clone https://github.com/rdrachenberg/sky-net.git
+    git clone -b forked https://github.com/rdrachenberg/sky-net.git
 
 ### Start the App
     npm run dev
