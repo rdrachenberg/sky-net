@@ -176,8 +176,8 @@ const App = () => {
   }
 
   useEffect(() => {
-    // socket.current = io('ws://localhost:8000'); // dev
-    socket.current = io('https://cyberdyne-sky-net.herokuapp.com/');
+    socket.current = io('ws://localhost:8000'); // dev websocket local host 
+    // socket.current = io('https://cyberdyne-sky-net.herokuapp.com/'); // for heroku deployment 
 
     socket.current.on('connect', () => {
       console.log(socket.current.id);
