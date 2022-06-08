@@ -1,5 +1,5 @@
 # sky-net
-#### A simple JS blockchain with a REACT.js front end utilizing websockets. Warning- Forking or running may cause sky-net to become active. Watchout for romming Terminators if this happens [Heroku Deployed](https://cyberdyne-sky-net.herokuapp.com/) 
+#### A simple JS blockchain with a REACT.js front end utilizing websockets. Warning- Forking or running may cause sky-net to become active. Watchout for roaming Terminators if this happens 😊 [Heroku Deployed](https://cyberdyne-sky-net.herokuapp.com/) 
 
 <p align='center'>
     <img src='https://img.shields.io/badge/JavaScript-93.5%25-brightgreen?style=plastic&logo=javascript'>
