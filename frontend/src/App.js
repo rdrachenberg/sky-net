@@ -193,7 +193,6 @@ const App = () => {
       setData(data);
       console.log(data);
       
-
       // if(data && data !== undefined){
       //   data.current.addEventListener('DOMNodeInserted', event => {
       //     const {currentTarget: target} = event;
