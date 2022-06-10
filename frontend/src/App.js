@@ -7,7 +7,6 @@ import Modal from './blockchainModal';
 
 const defaultMessage = 'Here is some default text blase blase'
 
-
 const App = () => {
   const socket = useRef();
   const [data, setData] = useState([]);
