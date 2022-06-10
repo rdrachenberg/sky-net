@@ -46,10 +46,7 @@ const generateKeys = () => {
     console.log(...[...keyGenerator]);
     return keyGenerator
 }
-
-// console.log('Private Key: ', privateKey);
-// console.log('Public Key: ', publicKey);
-
+ // generateKeys(); // uncomment to use file to generate keys
 
 module.exports = { generateKeys };
 
